@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace ArrayList
+namespace List
 {
     public class ArrayList<T> where T : IComparable<T>
     {
