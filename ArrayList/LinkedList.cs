@@ -29,23 +29,13 @@ namespace List
         {
             get
             {
-                // Вынести в метод
-                Node<T> currentNode = _root;
-                for (int i = 1; i <= index; i++)
-                {
-                    currentNode = currentNode.Next;
-                }
+                Node<T> currentNode = GetNodeByIndex(index);
 
                 return currentNode.Value;
             }
             set
             {
-                // Вынести в метод
-                Node<T> currentNode = _root;
-                for (int i = 1; i <= index; i++)
-                {
-                    currentNode = currentNode.Next;
-                }
+                Node<T> currentNode = GetNodeByIndex(index);
 
                 currentNode.Value = value;
             }
@@ -59,7 +49,7 @@ namespace List
         {
             Length = 0;
             _root = null;
-            _tail = null;
+            _tail = _root;
         }
 
         public LinkedList(T value)
@@ -85,7 +75,7 @@ namespace List
             else
             {
                 _root = null;
-                _tail = null;
+                _tail = _root;
             }
         }
 
@@ -103,11 +93,16 @@ namespace List
                     {
                         return false;
                     }
-
+                    if ((currentListNode.Next is null) || (currentThisNode.Next is null))
+                    {
+                        break;
+                    }
                     currentListNode = currentListNode.Next;
                     currentThisNode = currentThisNode.Next;
                 }
                 while (!(currentThisNode.Next is null));
+
+                return true;
             }
 
             return false;
@@ -128,6 +123,17 @@ namespace List
             }
 
             return result.ToString();
+        }
+
+        private Node<T> GetNodeByIndex(int index)
+        {
+            Node<T> currentNode = _root;
+            for (int i = 1; i < index; i++)
+            {
+                currentNode = currentNode.Next;
+            }
+
+            return currentNode;
         }
     }
 }
