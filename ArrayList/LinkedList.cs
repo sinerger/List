@@ -4,7 +4,130 @@ using System.Text;
 
 namespace List
 {
-    class LinkedList
+    class LinkedList<T> where T : IComparable<T>
     {
+        public int Length
+        {
+            get
+            {
+                return _length;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    _length = value;
+                }
+                else
+                {
+                    _length = 0;
+                }
+            }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                // Вынести в метод
+                Node<T> currentNode = _root;
+                for (int i = 1; i <= index; i++)
+                {
+                    currentNode = currentNode.Next;
+                }
+
+                return currentNode.Value;
+            }
+            set
+            {
+                // Вынести в метод
+                Node<T> currentNode = _root;
+                for (int i = 1; i <= index; i++)
+                {
+                    currentNode = currentNode.Next;
+                }
+
+                currentNode.Value = value;
+            }
+        }
+
+        private int _length;
+        private Node<T> _root;
+        private Node<T> _tail;
+
+        public LinkedList()
+        {
+            Length = 0;
+            _root = null;
+            _tail = null;
+        }
+
+        public LinkedList(T value)
+        {
+            Length = 1;
+            _root = new Node<T>(value);
+            _tail = _root;
+        }
+
+        public LinkedList(T[] values)
+        {
+            Length = values.Length;
+            if (values.Length != 0)
+            {
+                _root = new Node<T>(values[0]);
+                _tail = _root;
+                for (int i = 1; i < values.Length; i++)
+                {
+                    _tail.Next = new Node<T>(values[i]);
+                    _tail = _tail.Next;
+                }
+            }
+            else
+            {
+                _root = null;
+                _tail = null;
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            LinkedList<T> list = (LinkedList<T>)obj;
+            if (this.Length == list.Length)
+            {
+                Node<T> currentThisNode = this._root;
+                Node<T> currentListNode = list._root;
+
+                do
+                {
+                    if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                    {
+                        return false;
+                    }
+
+                    currentListNode = currentListNode.Next;
+                    currentThisNode = currentThisNode.Next;
+                }
+                while (!(currentThisNode.Next is null));
+            }
+
+            return false;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder(string.Empty);
+            if (Length != 0)
+            {
+                Node<T> currentNode = _root;
+                result.Append(currentNode.Value + ", ");
+                while (!(currentNode.Next is null))
+                {
+                    currentNode = currentNode.Next;
+                    result.Append(currentNode.Value + ", ");
+                }
+            }
+
+            return result.ToString();
+        }
     }
 }
