@@ -37,14 +37,12 @@ namespace List
             }
             set
             {
-                if (value != null && (index >= 0 && index < _array.Length))
+                if (index >= 0 && index < _array.Length)
                 {
                     _array[index] = value;
                 }
-                else
-                {
-                    throw new NullReferenceException("Value is null");
-                }
+
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -92,7 +90,7 @@ namespace List
         /// <summary>
         /// Adds a value to the end of the list.
         /// </summary>
-        /// <param value="value"></param>
+        /// <param value="value">Value to be added.</param>
         public void Add(T value)
         {
             int lastIndex = Length;
@@ -102,7 +100,7 @@ namespace List
         /// <summary>
         /// Adds a value to the beginning of the list.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param value="value">Value to be added.</param>
         public void AddFirst(T value)
         {
             int index = 0;
@@ -112,8 +110,8 @@ namespace List
         /// <summary>
         /// Adds a value at the specified index.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
+        /// <param value="value">Value to be added.</param>
+        /// <param index="index">Index by which the value is inserted.</param>
         public void AddByIndex(T value, int index)
         {
             if (index >= 0 && index <= Length)
@@ -138,7 +136,7 @@ namespace List
         }
 
         /// <summary>
-        /// Remove the last item in the list
+        /// Remove the last item in the list.
         /// </summary>
         public void Remove()
         {
@@ -147,7 +145,7 @@ namespace List
         }
 
         /// <summary>
-        /// Remove the first item in the list
+        /// Remove the first item in the list.
         /// </summary>
         public void RemoveFirst()
         {
@@ -158,7 +156,7 @@ namespace List
         /// <summary>
         /// Remove an element by index from the array.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param Index="index">Index by which the value is removed</param>
         public void RemoveByIndex(int index)
         {
             if (index >= 0 && index <= Length)
@@ -187,7 +185,7 @@ namespace List
         /// <summary>
         /// Remove H items from the end of the list.
         /// </summary>
-        /// <param name="count"></param>
+        /// <param count="count">Count of items to be removed.</param>
         public void RemoveNElements(int count)
         {
             if (count == 1)
@@ -211,18 +209,18 @@ namespace List
         /// <summary>
         /// Remove H items from the beginning of the list.
         /// </summary>
-        /// <param name="n"></param>
-        public void RemoveNElementsFromStart(int n)
+        /// <param count="count">Count of items to be removed.</param>
+        public void RemoveNElementsFromStart(int count)
         {
             int stastIndex = 0;
-            RemoveNElementsByIndex(n, stastIndex);
+            RemoveNElementsByIndex(count, stastIndex);
         }
 
         /// <summary>
         /// Remove H elements starting from the specified index.
         /// </summary>
-        /// <param name="count"></param>
-        /// <param name="index"></param>
+        /// <param count="count">Count of items to be removed.</param>
+        /// <param index="index">Index from which items will be removed.</param>
         public void RemoveNElementsByIndex(int count, int index)
         {
             if (index >= 0 && index <= Length && count >= 0)
@@ -257,10 +255,10 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Removing the first occurrence of a value.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param value="value">Value to be removed.</param>
+        /// <returns>Index of the removed item.</returns>
         public int RemoveElementByValue(T value)
         {
             if (value != null)
@@ -281,10 +279,10 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Remove all occurrences of an element.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param value="value">Value to be removed.</param>
+        /// <returns>Returns the number of items removed.</returns>
         public int RemoveAllElementsByValue(T value)
         {
             if (value != null)
@@ -313,10 +311,10 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Returns the index of the first occurrence.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param value="value">The value by which the index will be searched for.</param>
+        /// <returns>Index of the first occurrence of the value.</returns>
         public int GetIndexbyValue(T value)
         {
             if (value != null)
@@ -357,7 +355,7 @@ namespace List
         /// <summary>
         /// Return max value of list.
         /// </summary>
-        /// <returns>Max value</returns>
+        /// <returns>Max value.</returns>
         public T GetMaxValue()
         {
             return _array[GetIndexMaxValue()];
@@ -366,7 +364,7 @@ namespace List
         /// <summary>
         /// Return min value of list.
         /// </summary>
-        /// <returns>Min value</returns>
+        /// <returns>Min value.</returns>
         public T GetMinValue()
         {
             return _array[GetIndexMinValue()];
@@ -375,7 +373,7 @@ namespace List
         /// <summary>
         /// Return index min value of list.
         /// </summary>
-        /// <returns>Index min value</returns>
+        /// <returns>Index min value.</returns>
         public int GetIndexMinValue()
         {
             if (_array.Length > 0)
@@ -400,7 +398,7 @@ namespace List
         /// <summary>
         /// Return index max value of list.
         /// </summary>
-        /// <returns>Index max value</returns>
+        /// <returns>Index max value.</returns>
         public int GetIndexMaxValue()
         {
             if (_array.Length > 0)
@@ -423,9 +421,9 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Adds an ArrayList to the end of the list.
         /// </summary>
-        /// <param name="list"></param>
+        /// <param list="list">ArrayList.</param>
         public void AddArrayList(ArrayList<T> list)
         {
             int lastIndex = Length;
@@ -433,9 +431,9 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Adds an ArrayList to the beginning of the list.
         /// </summary>
-        /// <param name="list"></param>
+        /// <param list="list">ArrayList.</param>
         public void AddArrayListToStart(ArrayList<T> list)
         {
             int firstIndex = 0;
@@ -443,10 +441,10 @@ namespace List
         }
 
         /// <summary>
-        /// 
+        /// Adds an ArrayList to the list by index.
         /// </summary>
-        /// <param name="list"></param>
-        /// <param name="index"></param>
+        /// <param list="list">ArrayList.</param>
+        /// <param index="index">Index by which the value will be inserted.</param>
         public void AddArrayListByIndex(ArrayList<T> list, int index)
         {
             if (index >= 0 && index <= Length)
@@ -479,13 +477,12 @@ namespace List
             {
                 throw new IndexOutOfRangeException();
             }
-
         }
 
         /// <summary>
-        /// 
+        /// Sorts the list with inserts.
         /// </summary>
-        /// <param name="isDescending"></param>
+        /// <param isDescending="isDescending">If true, it sorts in descending order. If false, it sorts in ascending order.</param>
         public void SortInsertion(bool isDescending)
         {
             if (_array.Length >= 0)
@@ -545,11 +542,6 @@ namespace List
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="firstIndex"></param>
-        /// <param name="secondIndex"></param>
         private void Swap(int firstIndex, int secondIndex)
         {
             T tempVaue = _array[firstIndex];
@@ -557,9 +549,6 @@ namespace List
             _array[secondIndex] = tempVaue;
         }
 
-        /// <summary>
-        /// Increases the size of the array by a factor of 1.33+1.
-        /// </summary>
         private void UpSize()
         {
             int tempLength = (int)(Length * 1.33d + 1);
@@ -572,9 +561,6 @@ namespace List
             _array = tempArray;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void DownSize()
         {
             if (Length < _array.Length / 2 + 1)
