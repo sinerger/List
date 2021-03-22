@@ -4,7 +4,7 @@ using System.Text;
 
 namespace List
 {
-    class LinkedList<T> where T : IComparable<T>
+    public class LinkedList<T> where T : IComparable<T>
     {
         public int Length
         {
@@ -29,23 +29,13 @@ namespace List
         {
             get
             {
-                // Вынести в метод
-                Node<T> currentNode = _root;
-                for (int i = 1; i <= index; i++)
-                {
-                    currentNode = currentNode.Next;
-                }
+                Node<T> currentNode = GetNodeByIndex(index);
 
                 return currentNode.Value;
             }
             set
             {
-                // Вынести в метод
-                Node<T> currentNode = _root;
-                for (int i = 1; i <= index; i++)
-                {
-                    currentNode = currentNode.Next;
-                }
+                Node<T> currentNode = GetNodeByIndex(index);
 
                 currentNode.Value = value;
             }
@@ -59,7 +49,7 @@ namespace List
         {
             Length = 0;
             _root = null;
-            _tail = null;
+            _tail = _root;
         }
 
         public LinkedList(T value)
@@ -85,7 +75,116 @@ namespace List
             else
             {
                 _root = null;
-                _tail = null;
+                _tail = _root;
+            }
+        }
+
+        public void Add(T value)
+        {
+            if (_tail is null)
+            {
+                Node<T> currentNode = new Node<T>(value);
+
+                _root = currentNode;
+                ++Length;
+            }
+            else
+            {
+                Node<T> currentNode = new Node<T>(value);
+
+                _tail.Next = currentNode;
+                ++Length;
+            }
+        }
+
+        public void AddFirst(T value)
+        {
+            Node<T> insertNode = new Node<T>(value);
+
+            insertNode.Next = _root;
+            _root = insertNode;
+            ++Length;
+        }
+        public void AddByIndex(T value, int index)
+        {
+            if (index >= 0 && index <= Length)
+            {
+                if (index == 0)
+                {
+                    AddFirst(value);
+                }
+                else if (index == Length - 1)
+                {
+                    Add(value);
+                }
+                else
+                {
+                    Node<T> insertNode = new Node<T>(value);
+                    Node<T> currentNode = GetNodeByIndex(index);
+
+                    insertNode.Next = currentNode.Next;
+                    currentNode.Next = insertNode;
+                    ++Length;
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public void AddList(LinkedList<T> list)
+        {
+            if (list.Length != 0)
+            {
+                if (_tail is null)
+                {
+                    _root = list._root;
+                }
+                else
+                {
+                    _tail.Next = list._root;
+                    _tail = list._tail;
+                }
+
+                Length += list.Length;
+            }
+        }
+
+        public void AddListFirst(LinkedList<T> list)
+        {
+            if (list.Length != 0)
+            {
+                list._tail.Next = _root;
+                _root = list._root;
+                Length += list.Length;
+            }
+        }
+
+        public void AddListByIndex(LinkedList<T> list, int index)
+        {
+            if (index >= 0 && index < Length)
+            {
+                if (index == 0)
+                {
+                    AddListFirst(list);
+                }
+                else if (index == Length - 1)
+                {
+                    AddList(list);
+                }
+                else
+                {
+                    Node<T> currentNode = GetNodeByIndex(index);
+
+                    list._tail.Next = currentNode.Next;
+                    currentNode.Next = list._root;
+                    Length += list.Length;
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -103,11 +202,16 @@ namespace List
                     {
                         return false;
                     }
-
+                    if ((currentListNode.Next is null) || (currentThisNode.Next is null))
+                    {
+                        break;
+                    }
                     currentListNode = currentListNode.Next;
                     currentThisNode = currentThisNode.Next;
                 }
                 while (!(currentThisNode.Next is null));
+
+                return true;
             }
 
             return false;
@@ -119,15 +223,26 @@ namespace List
             if (Length != 0)
             {
                 Node<T> currentNode = _root;
-                result.Append(currentNode.Value + ", ");
+                result.Append(currentNode.Value + " ");
                 while (!(currentNode.Next is null))
                 {
                     currentNode = currentNode.Next;
-                    result.Append(currentNode.Value + ", ");
+                    result.Append(currentNode.Value + " ");
                 }
             }
 
             return result.ToString();
+        }
+
+        private Node<T> GetNodeByIndex(int index)
+        {
+            Node<T> currentNode = _root;
+            for (int i = 1; i < index; i++)
+            {
+                currentNode = currentNode.Next;
+            }
+
+            return currentNode;
         }
     }
 }
