@@ -49,7 +49,6 @@ namespace List
         private int _length;
         private T[] _array;
         private int _initLength = 10;
-
         public ArrayList()
         {
             Length = 0;
@@ -93,8 +92,7 @@ namespace List
         /// <param value="value">Value to be added.</param>
         public void Add(T value)
         {
-            int lastIndex = Length;
-            AddByIndex(value, lastIndex);
+            AddByIndex(value, index: Length);
         }
 
         /// <summary>
@@ -103,8 +101,7 @@ namespace List
         /// <param value="value">Value to be added.</param>
         public void AddFirst(T value)
         {
-            int index = 0;
-            AddByIndex(value, index);
+            AddByIndex(value, index: 0);
         }
 
         /// <summary>
@@ -140,8 +137,8 @@ namespace List
         /// </summary>
         public void Remove()
         {
-            int lastIndex = Length - 1;
-            RemoveByIndex(lastIndex);
+            --Length;
+            DownSize();
         }
 
         /// <summary>
@@ -149,8 +146,10 @@ namespace List
         /// </summary>
         public void RemoveFirst()
         {
-            int startIndex = 0;
-            RemoveByIndex(startIndex);
+            if (Length != 0)
+            {
+                RemoveByIndex(index: 0);
+            }
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace List
         /// <param Index="index">Index by which the value is removed</param>
         public void RemoveByIndex(int index)
         {
-            if (index >= 0 && index <= Length)
+            if (index >= 0 && index < Length)
             {
                 if (index == Length - 1)
                 {
@@ -173,6 +172,7 @@ namespace List
                     }
 
                     --Length;
+
                     DownSize();
                 }
             }
@@ -190,18 +190,18 @@ namespace List
         {
             if (count == 1)
             {
-                int targetIndex = Length - 1;
-                RemoveNElementsByIndex(count, targetIndex);
+                RemoveNElementsByIndex(count, index: Length - 1);
             }
             else if (count >= Length)
             {
                 Length = 0;
+
                 DownSize();
             }
             else
             {
-                int lastIndex = Length - 1;
-                int targetIndex = lastIndex - count + 1;
+                int targetIndex = Length - count;
+
                 RemoveNElementsByIndex(count, targetIndex);
             }
         }
@@ -212,8 +212,7 @@ namespace List
         /// <param count="count">Count of items to be removed.</param>
         public void RemoveNElementsFromStart(int count)
         {
-            int stastIndex = 0;
-            RemoveNElementsByIndex(count, stastIndex);
+            RemoveNElementsByIndex(count, index: 0);
         }
 
         /// <summary>
@@ -268,6 +267,7 @@ namespace List
                     if (_array[i].CompareTo(value) == 0)
                     {
                         RemoveByIndex(i);
+
                         return i;
                     }
                 }
@@ -293,6 +293,7 @@ namespace List
                     if (_array[i].CompareTo(value) == 0)
                     {
                         RemoveByIndex(i);
+
                         --i;
                         ++countRemoveElements;
                     }
@@ -301,6 +302,7 @@ namespace List
                 if (countRemoveElements == 0)
                 {
                     countRemoveElements -= 1;
+
                     return countRemoveElements;
                 }
 
@@ -339,15 +341,13 @@ namespace List
         /// <summary>
         /// Reverse the array.
         /// </summary>
-        public void Revers()
+        public void Reverse()
         {
             if (_array.Length > 0)
             {
                 for (int i = 0; i < Length / 2; i++)
                 {
-                    T tempValue = _array[i];
-                    _array[i] = _array[Length - 1 - i];
-                    _array[Length - 1 - i] = tempValue;
+                    Swap(i, Length - 1 - i);
                 }
             }
         }
@@ -426,8 +426,7 @@ namespace List
         /// <param list="list">ArrayList.</param>
         public void AddArrayList(ArrayList<T> list)
         {
-            int lastIndex = Length;
-            AddArrayListByIndex(list, lastIndex);
+            AddArrayListByIndex(list, index: Length);
         }
 
         /// <summary>
@@ -436,8 +435,7 @@ namespace List
         /// <param list="list">ArrayList.</param>
         public void AddArrayListToStart(ArrayList<T> list)
         {
-            int firstIndex = 0;
-            AddArrayListByIndex(list, firstIndex);
+            AddArrayListByIndex(list, index: 0);
         }
 
         /// <summary>
@@ -483,23 +481,21 @@ namespace List
         /// Sorts the list with inserts.
         /// </summary>
         /// <param isDescending="isDescending">If true, it sorts in descending order. If false, it sorts in ascending order.</param>
-        public void SortInsertion(bool isDescending)
+        public void Sort(bool isDescending)
         {
-            if (_array.Length >= 0)
+            for (int i = 1; i < Length; i++)
             {
-                for (int i = 1; i < Length; i++)
+                T currentValue = _array[i];
+                int currentIndex = i;
+                while ((isDescending && currentIndex > 0 && (_array[currentIndex - 1].CompareTo(currentValue) == -1))
+                    || (!isDescending && currentIndex > 0 && (_array[currentIndex - 1].CompareTo(currentValue) == 1)))
                 {
-                    T currentValue = _array[i];
-                    int currentIndex = i;
-                    while ((isDescending && currentIndex > 0 && (_array[currentIndex - 1].CompareTo(currentValue) == -1))
-                        || (!isDescending && currentIndex > 0 && (_array[currentIndex - 1].CompareTo(currentValue) == 1)))
-                    {
-                        Swap(currentIndex, currentIndex - 1);
-                        currentIndex -= 1;
-                    }
+                    Swap(currentIndex, currentIndex - 1);
 
-                    _array[currentIndex] = currentValue;
+                    currentIndex -= 1;
                 }
+
+                _array[currentIndex] = currentValue;
             }
         }
 
@@ -545,6 +541,7 @@ namespace List
         private void Swap(int firstIndex, int secondIndex)
         {
             T tempVaue = _array[firstIndex];
+
             _array[firstIndex] = _array[secondIndex];
             _array[secondIndex] = tempVaue;
         }
@@ -567,7 +564,6 @@ namespace List
             {
                 int tempLength = (int)(Length * 1.33d + 1);
                 T[] tempArray = new T[tempLength];
-
                 for (int i = 0; i < Length; i++)
                 {
                     tempArray[i] = _array[i];

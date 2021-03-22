@@ -34,6 +34,7 @@ namespace List.Tests
         [TestCase(100, 0, new int[] { 1, 2, 3, 4, 5 }, new int[] { 100, 1, 2, 3, 4, 5 })]
         [TestCase(-10, 1, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, -10, 2, 3, 4, 5 })]
         [TestCase(0, 3, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 0, 4, 5 })]
+        [TestCase(0, 5, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 0 })]
         public void AddByIndex_WhenValidValuePassed_ShouldAddToListByIndex(int value, int index, int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
@@ -56,6 +57,7 @@ namespace List.Tests
 
         [TestCase(new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4 })]
         [TestCase(new int[] { 1 }, new int[] { })]
+        [TestCase(new int[] { }, new int[] { })]
         public void Remove_WhenValidValuePassed_SholdRemoveLastElement(int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
@@ -69,6 +71,7 @@ namespace List.Tests
         [TestCase(new int[] { 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
         [TestCase(new int[] { -10, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
         [TestCase(new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(new int[] { }, new int[] { })]
         public void RemoveFirst_WhenValidValuePassed_SholdRemoveFirstElement(int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
@@ -145,6 +148,7 @@ namespace List.Tests
         [TestCase(2, 2, new int[] { 100, 1, 2, 3, 4, 5 }, new int[] { 100, 1, 4, 5 })]
         [TestCase(3, 3, new int[] { 100, 1, 2, 3, 4, 5 }, new int[] { 100, 1, 2 })]
         [TestCase(4, 4, new int[] { 100, 1, 2, 3, 4, 5 }, new int[] { 100, 1, 2, 3 })]
+        [TestCase(0, 4, new int[] { 100, 1, 2, 3, 4, 5 }, new int[] { 100, 1, 2, 3, 4, 5 })]
         public void RemoveNElementsByIndex_WhenValidValuePassed_SholdRemoveNElementByIndex(int n, int index, int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
@@ -250,7 +254,7 @@ namespace List.Tests
             ArrayList<int> actual = new ArrayList<int>(actualArray);
             ArrayList<int> expected = new ArrayList<int>(expectedArray);
 
-            actual.Revers();
+            actual.Reverse();
 
             Assert.AreEqual(expected, actual);
         }
@@ -362,12 +366,12 @@ namespace List.Tests
         [TestCase(new int[] { 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 })]
         [TestCase(new int[] { }, new int[] { })]
         [TestCase(new int[] { 100 }, new int[] { 100 })]
-        public void SortInsertion_WhenValidSortPasse_ShouldSortingListAscending(int[] actualArray, int[] expectedArray)
+        public void Sort_WhenValidSortPasse_ShouldSortingListAscending(int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
             ArrayList<int> expected = new ArrayList<int>(expectedArray);
 
-            actual.SortInsertion(false);
+            actual.Sort(false);
 
             Assert.AreEqual(expected, actual);
         }
@@ -376,12 +380,12 @@ namespace List.Tests
         [TestCase(new int[] { 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 })]
         [TestCase(new int[] { }, new int[] { })]
         [TestCase(new int[] { 100 }, new int[] { 100 })]
-        public void SortInsertion_WhenValidSortPasse_ShouldSortingListDescending(int[] actualArray, int[] expectedArray)
+        public void Sort_WhenValidSortPasse_ShouldSortingListDescending(int[] actualArray, int[] expectedArray)
         {
             ArrayList<int> actual = new ArrayList<int>(actualArray);
             ArrayList<int> expected = new ArrayList<int>(expectedArray);
 
-            actual.SortInsertion(true);
+            actual.Sort(true);
 
             Assert.AreEqual(expected, actual);
         }
