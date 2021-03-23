@@ -124,15 +124,15 @@ namespace List
             {
                 Node<T> currentNode = _root;
 
-                result.Append(currentNode.Value + ", ");
+                result.Append(currentNode.Value + " ");
                 while (!(currentNode.Next is null))
                 {
                     currentNode = currentNode.Next;
-                    result.Append(currentNode.Value + ", ");
+                    result.Append(currentNode.Value + " ");
                 }
             }
 
-            return result.ToString();
+            return result.ToString().Trim();
         }
 
         private Node<T> GetNodeByIndex(int index)
