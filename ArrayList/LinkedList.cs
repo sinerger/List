@@ -91,7 +91,12 @@ namespace List
         }
         public void RemoveFirst()
         {
-
+            if (Length > 0)
+            {
+                Node<T> current = _root.Next;
+                _root = current;
+                --Length;
+            }
         }
         public void RemoveByIndex(int index)
         {
