@@ -81,7 +81,13 @@ namespace List
 
         public void Remove()
         {
-
+            if (Length > 0)
+            {
+                Node<T> current = GetNodeByIndex(index: Length - 1);
+                _tail = current;
+                _tail.Next = null;
+                --Length;
+            }
         }
         public void RemoveFirst()
         {
@@ -105,11 +111,11 @@ namespace List
         }
         public int RemoveByValue(T value)
         {
-
+            return 0;
         }
         public int RemoveAllByValue(T value)
         {
-
+            return 0;
         }
         public override bool Equals(object obj)
         {
