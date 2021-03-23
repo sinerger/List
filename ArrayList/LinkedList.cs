@@ -4,7 +4,7 @@ using System.Text;
 
 namespace List
 {
-    class LinkedList<T> where T : IComparable<T>
+     public class LinkedList<T> where T : IComparable<T>
     {
         public int Length
         {
@@ -82,6 +82,7 @@ namespace List
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
+
             if (this.Length == list.Length)
             {
                 Node<T> currentThisNode = this._root;
@@ -93,10 +94,12 @@ namespace List
                     {
                         return false;
                     }
+
                     if ((currentListNode.Next is null) || (currentThisNode.Next is null))
                     {
                         break;
                     }
+
                     currentListNode = currentListNode.Next;
                     currentThisNode = currentThisNode.Next;
                 }
@@ -111,9 +114,11 @@ namespace List
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(string.Empty);
+
             if (Length != 0)
             {
                 Node<T> currentNode = _root;
+
                 result.Append(currentNode.Value + ", ");
                 while (!(currentNode.Next is null))
                 {
@@ -128,6 +133,7 @@ namespace List
         private Node<T> GetNodeByIndex(int index)
         {
             Node<T> currentNode = _root;
+
             for (int i = 1; i < index; i++)
             {
                 currentNode = currentNode.Next;
