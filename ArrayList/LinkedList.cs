@@ -4,7 +4,7 @@ using System.Text;
 
 namespace List
 {
-     public class LinkedList<T> where T : IComparable<T>
+    public class LinkedList<T> where T : IComparable<T>
     {
         public int Length
         {
@@ -85,6 +85,11 @@ namespace List
 
             if (this.Length == list.Length)
             {
+                if (this.Length == 0 && list.Length == 0)
+                {
+                    return true;
+                }
+
                 Node<T> currentThisNode = this._root;
                 Node<T> currentListNode = list._root;
 
