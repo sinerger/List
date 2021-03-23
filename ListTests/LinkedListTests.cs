@@ -68,14 +68,42 @@ namespace List.Tests
         [TestCase(7, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(100, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(1000, new int[] { }, new int[] { })]
-        public void RemoveRange_WhenValidValuePassed_SholdRemoveNElement(int n, int[] actualArray, int[] expectedArray)
+        public void RemoveRange_WhenValidValuePassed_SholdRemoveNElement(int count, int[] actualArray, int[] expectedArray)
         {
             LinkedList<int> actual = new LinkedList<int>(actualArray);
             LinkedList<int> expected = new LinkedList<int>(expectedArray);
 
-            actual.RemoveRange(n);
+            actual.RemoveRange(count);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 2, 3, 4, 5 })]
+        [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5 })]
+        [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 4, 5 })]
+        [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 5 })]
+        [TestCase(6, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(7, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(100, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(1000, new int[] { }, new int[] { })]
+        public void RemoveRangeFromStart_WhenValidValuePassed_SholdRemoveNElementForStart(int count, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+
+            actual.RemoveRangeFromStart(count);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(-10, new int[] { 1, 2, 3, 4, 5 })]
+        public void RemoveRangeFromStart_WhenInvalidPaseed_ShoultReturnIndexOutOfRangeException(int count, int[] actualArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+
+            Assert.Throws<ArgumentException>(() => actual.RemoveRangeFromStart(count));
         }
     }
 }

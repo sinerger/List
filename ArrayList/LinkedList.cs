@@ -155,9 +155,32 @@ namespace List
             }
         }
 
-        public void RemoveRangeToStart(int count)
+        public void RemoveRangeFromStart(int count)
         {
+            if (Length > 0 && count >= 0)
+            {
+                if (count >= Length)
+                {
+                    _root = null;
+                    _tail = null;
+                    Length = 0;
+                }
+                else if (count == 0)
+                {
+                    return;
+                }
+                else
+                {
+                    Node<T> current = GetNodeByIndex(index: count);
 
+                    _root = current.Next;
+                    Length -= count;
+                }
+            }
+            else if (count < 0)
+            {
+                throw new ArgumentException("Invalid count");
+            }
         }
 
         public void RemoveRangeByIndex(int index, int count)
