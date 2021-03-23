@@ -132,7 +132,7 @@ namespace List
         }
         public void RemoveRange(int count)
         {
-            if (Length > 0)
+            if (Length > 0 && count >= 0)
             {
                 if (count >= Length)
                 {
@@ -149,9 +149,13 @@ namespace List
                     Length -= count;
                 }
             }
+            else if (count < 0)
+            {
+                throw new ArgumentException("Invalid count");
+            }
         }
 
-        public void RemoveRangeToStart(int index)
+        public void RemoveRangeToStart(int count)
         {
 
         }
