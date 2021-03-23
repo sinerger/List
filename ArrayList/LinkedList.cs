@@ -79,6 +79,38 @@ namespace List
             }
         }
 
+        public void Remove()
+        {
+
+        }
+        public void RemoveFirst()
+        {
+
+        }
+        public void RemoveByIndex(int index)
+        {
+
+        }
+        public void RemoveRange(int count)
+        {
+
+        }
+        public void RemoveRangeToStart(int index)
+        {
+
+        }
+        public void RemoveRangeByIndex(int index,int count)
+        {
+
+        }
+        public int RemoveByValue(T value)
+        {
+
+        }
+        public int RemoveAllByValue(T value)
+        {
+
+        }
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
