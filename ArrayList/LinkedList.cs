@@ -134,11 +134,20 @@ namespace List
         {
             if (Length > 0)
             {
-                Node<T> current = GetNodeByIndex(Length-count);
+                if (count >= Length)
+                {
+                    _root = null;
+                    _tail = null;
+                    Length = 0;
+                }
+                else
+                {
+                    Node<T> current = GetNodeByIndex(index: Length - count);
 
-                current.Next = null;
-                _tail = current;
-                Length -= count;
+                    current.Next = null;
+                    _tail = current;
+                    Length -= count;
+                }
             }
         }
 
