@@ -30,5 +30,32 @@ namespace List.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase(0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 2, 3, 4, 5 })]
+        [TestCase(2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 3, 4, 5 })]
+        [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 4, 5 })]
+        [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 5 })]
+        [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4 })]
+        [TestCase(0, new int[] { 0 }, new int[] { })]
+        public void RemoveByIndex_WhenValidValuePassed_SholdRemoveElementByIndex(int index, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+
+            actual.RemoveByIndex(index);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(10, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(-10, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(6, new int[] { 1, 2, 3, 4, 5 })]
+        public void RemoveByIndex_WhenInvalidPaseed_ShoultReturnIndexOutOfRangeException(int index, int[] actualArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+
+            Assert.Throws<IndexOutOfRangeException>(() => actual.RemoveByIndex(index));
+        }
     }
 }

@@ -84,44 +84,77 @@ namespace List
             if (Length > 0)
             {
                 Node<T> current = GetNodeByIndex(index: Length - 1);
+
                 _tail = current;
                 _tail.Next = null;
                 --Length;
             }
         }
+
         public void RemoveFirst()
         {
             if (Length > 0)
             {
                 Node<T> current = _root.Next;
+
                 _root = current;
                 --Length;
             }
         }
+
         public void RemoveByIndex(int index)
         {
+            if (index >= 0 && index < Length)
+            {
+                if (Length > 0)
+                {
+                    if (index == 0)
+                    {
+                        RemoveFirst();
+                    }
+                    else if (index == Length - 1)
+                    {
+                        Remove();
+                    }
+                    else
+                    {
+                        Node<T> current = GetNodeByIndex(index);
 
+                        current.Next = current.Next.Next;
+                        --Length;
+                    }
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
         }
         public void RemoveRange(int count)
         {
 
         }
+
         public void RemoveRangeToStart(int index)
         {
 
         }
-        public void RemoveRangeByIndex(int index,int count)
+
+        public void RemoveRangeByIndex(int index, int count)
         {
 
         }
+
         public int RemoveByValue(T value)
         {
             return 0;
         }
+
         public int RemoveAllByValue(T value)
         {
             return 0;
         }
+
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
