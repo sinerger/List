@@ -57,5 +57,25 @@ namespace List.Tests
 
             Assert.Throws<IndexOutOfRangeException>(() => actual.RemoveByIndex(index));
         }
+
+        [TestCase(0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4 })]
+        [TestCase(2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3 })]
+        [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2 })]
+        [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1 })]
+        [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0 })]
+        [TestCase(6, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(7, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(100, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(1000, new int[] { }, new int[] { })]
+        public void RemoveRange_WhenValidValuePassed_SholdRemoveNElement(int n, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+
+            actual.RemoveRange(n);
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

@@ -132,7 +132,14 @@ namespace List
         }
         public void RemoveRange(int count)
         {
+            if (Length > 0)
+            {
+                Node<T> current = GetNodeByIndex(Length-count);
 
+                current.Next = null;
+                _tail = current;
+                Length -= count;
+            }
         }
 
         public void RemoveRangeToStart(int index)
