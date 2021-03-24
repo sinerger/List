@@ -89,6 +89,207 @@ namespace List
             }
         }
 
+        public void Remove()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = GetNodeByIndex(index: Length - 1);
+
+                _tail = current;
+                _tail.Next = null;
+                --Length;
+            }
+        }
+
+        public void RemoveFirst()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root.Next;
+
+                _root = current;
+                --Length;
+            }
+        }
+
+        public void RemoveByIndex(int index)
+        {
+            if (index >= 0 && index < Length)
+            {
+                if (Length > 0)
+                {
+                    if (index == 0)
+                    {
+                        RemoveFirst();
+                    }
+                    else if (index == Length - 1)
+                    {
+                        Remove();
+                    }
+                    else
+                    {
+                        Node<T> current = GetNodeByIndex(index);
+
+                        current.Next = current.Next.Next;
+                        --Length;
+                    }
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+        public void RemoveRange(int count)
+        {
+            if (Length > 0 && count >= 0)
+            {
+                if (count >= Length)
+                {
+                    _root = null;
+                    _tail = null;
+                    Length = 0;
+                }
+                else
+                {
+                    Node<T> current = GetNodeByIndex(index: Length - count);
+
+                    current.Next = null;
+                    _tail = current;
+                    Length -= count;
+                }
+            }
+            else if (count < 0)
+            {
+                throw new ArgumentException("Invalid count");
+            }
+        }
+
+        public void RemoveRangeFromStart(int count)
+        {
+            if (Length > 0 && count >= 0)
+            {
+                if (count >= Length)
+                {
+                    _root = null;
+                    _tail = null;
+                    Length = 0;
+                }
+                else if (count == 0)
+                {
+                    return;
+                }
+                else
+                {
+                    Node<T> current = GetNodeByIndex(index: count);
+
+                    _root = current.Next;
+                    Length -= count;
+                }
+            }
+            else if (count < 0)
+            {
+                throw new ArgumentException("Invalid count");
+            }
+        }
+
+        public void RemoveRangeByIndex(int index, int count)
+        {
+            if (index >= 0 && index < Length)
+            {
+                if (index == 0)
+                {
+                    RemoveRangeFromStart(count);
+                }
+                else if (count == Length - 1)
+                {
+                    RemoveRange(count);
+                }
+                else if (count > 0)
+                {
+                    if (count + index >= Length)
+                    {
+                        Node<T> current = GetNodeByIndex(index);
+
+                        current.Next = null;
+                        _tail = current;
+                        Length = index;
+                    }
+                    else
+                    {
+                        Node<T> startRemoveRangeNode = GetNodeByIndex(index);
+                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count);
+
+                        startRemoveRangeNode.Next = finishRemoveRangeNode.Next;
+                        Length -= count;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid count");
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public int RemoveByValue(T value)
+        {
+            if (value != null)
+            {
+                Node<T> current = _root;
+                int index = 0;
+
+                while (!(current is null))
+                {
+                    if (current.Value.CompareTo(value) == 0)
+                    {
+                        RemoveByIndex(index);
+
+                        return index;
+                    }
+
+                    ++index;
+                    current = current.Next;
+                }
+
+                return -1;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid count");
+            }
+        }
+
+        public int RemoveAllByValue(T value)
+        {
+            if (value != null)
+            {
+                Node<T> current = _root;
+                int count = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(value) == 0)
+                    {
+                        RemoveByIndex(i);
+                        --i;
+                    }
+
+                    ++count;
+                    current = current.Next;
+                }
+
+                return count;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid count");
+            }
+        }
+
         public void Add(T value)
         {
             if (_tail is null)
