@@ -199,20 +199,11 @@ namespace List
 
             return result.ToString().Trim();
         }
-
+        
         private Node<T> GetNodeByIndex(int index)
         {
-            Node<T> currentNode = null;
-
-            if (index > Length / 2)
-            {
-                currentNode = _mid;
-            }
-            else
-            {
-                currentNode = _root;
-            }
-
+            Node<T> currentNode = _root;
+            
             for (int i = 1; i < index; i++)
             {
                 currentNode = currentNode.Next;
