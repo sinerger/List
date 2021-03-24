@@ -227,7 +227,29 @@ namespace List
 
         public int RemoveByValue(T value)
         {
-            return 0;
+            if (value != null)
+            {
+                Node<T> current = _root;
+                int index = 0;
+
+                while(!(current is null))
+                {
+                    if (current.Value.CompareTo(value) == 0)
+                    {
+                        RemoveByIndex(index);
+                        return index;
+                    }
+
+                    ++index;
+                    current = current.Next;
+                }
+
+                return -1;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid count");
+            }
         }
 
         public int RemoveAllByValue(T value)

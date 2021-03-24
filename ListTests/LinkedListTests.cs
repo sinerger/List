@@ -135,6 +135,7 @@ namespace List.Tests
 
             Assert.Throws<ArgumentException>(() => actual.RemoveRangeByIndex(index, count));
         }
+
         [TestCase(100, 6, new int[] { 0, 1, 2, 3, 4, 5 })]
         [TestCase(100, 70, new int[] { 0, 1, 2, 3, 4, 5 })]
         [TestCase(100, 800, new int[] { 0, 1, 2, 3, 4, 5 })]
@@ -145,6 +146,30 @@ namespace List.Tests
             LinkedList<int> actual = new LinkedList<int>(actualArray);
 
             Assert.Throws<IndexOutOfRangeException>(() => actual.RemoveRangeByIndex(index, count));
+        }
+
+        [TestCase(0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 2, 3, 4, 5 })]
+        [TestCase(2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 3, 4, 5 })]
+        [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 4, 5 })]
+        [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 5 })]
+        [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, })]
+        public void RemoveByValue_WhenValidValuePassed_SholdRemoveFirstEntryElementByValue(int value, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+
+            actual.RemoveByValue(value);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(null, new string[] { "100", "1", "2", "3", "4", "5" })]
+        public void RemoveByValue_WhenInvalidValuePassed_SholdReturnArgumentException(string value, string[] actualArray)
+        {
+            LinkedList<string> actual = new LinkedList<string>(actualArray);
+
+            Assert.Throws<ArgumentException>(() => actual.RemoveByValue(value));
         }
     }
 }
