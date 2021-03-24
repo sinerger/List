@@ -79,6 +79,37 @@ namespace List
             }
         }
 
+        public int GetIndex(T value)
+        {
+            if (value != null)
+            {
+                if (Length > 0)
+                {
+                    Node<T> current = _root;
+                    int index = 0;
+
+                    while (!(current is null))
+                    {
+                        if (current.Value.CompareTo(value) == 0)
+                        {
+                            return index;
+                        }
+
+                        ++index;
+                        current = current.Next;
+                    }
+
+                    return -1;
+                }
+
+                return -1;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid value");
+            }
+        }
+
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
