@@ -185,7 +185,44 @@ namespace List
 
         public void RemoveRangeByIndex(int index, int count)
         {
+            if (index >= 0 && index < Length)
+            {
+                if (index == 0)
+                {
+                    RemoveRangeFromStart(count);
+                }
+                else if (count == Length - 1)
+                {
+                    RemoveRange(count);
+                }
+                else if (count > 0)
+                {
+                    if (count + index >= Length)
+                    {
+                        Node<T> current = GetNodeByIndex(index);
 
+                        current.Next = null;
+                        _tail = current;
+                        Length = index;
+                    }
+                    else
+                    {
+                        Node<T> startRemoveRangeNode = GetNodeByIndex(index);
+                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count);
+
+                        startRemoveRangeNode.Next = finishRemoveRangeNode.Next;
+                        Length -= count;
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid count");
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
         }
 
         public int RemoveByValue(T value)

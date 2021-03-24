@@ -105,5 +105,46 @@ namespace List.Tests
 
             Assert.Throws<ArgumentException>(() => actual.RemoveRangeFromStart(count));
         }
+
+        [TestCase(0, 0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(1, 1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 2, 3, 4, 5 })]
+        [TestCase(2, 2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 4, 5 })]
+        [TestCase(3, 3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2 })]
+        [TestCase(4, 4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3 })]
+        [TestCase(10, 4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3 })]
+        [TestCase(100, 0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
+        [TestCase(1, 0, new int[] { 0 }, new int[] { })]
+        public void RemoveRangeByIndex_WhenValidValuePassed_SholdRemoveNElementByIndex(int count, int index, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+
+            actual.RemoveRangeByIndex(index, count);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(-100, 0, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(-100, 2, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(-100, 3, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(-100, 4, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(-100, 5, new int[] { 0, 1, 2, 3, 4, 5 })]
+        public void RemoveNElementsByIndex_WhenInvalidValuePassed_SholdReturnArgumentException(int count, int index, int[] actualArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+
+            Assert.Throws<ArgumentException>(() => actual.RemoveRangeByIndex(index, count));
+        }
+        [TestCase(100, 6, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(100, 70, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(100, 800, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(100, 900, new int[] { 0, 1, 2, 3, 4, 5 })]
+        [TestCase(100, -1, new int[] { 0, 1, 2, 3, 4, 5 })]
+        public void RemoveNElementsByIndex_WhenInvalidValuePassed_SholdReturnIndexOutOfRangeException(int count, int index, int[] actualArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+
+            Assert.Throws<IndexOutOfRangeException>(() => actual.RemoveRangeByIndex(index, count));
+        }
     }
 }
