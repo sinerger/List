@@ -290,6 +290,120 @@ namespace List
             }
         }
 
+        public void Add(T value)
+        {
+            if (_tail is null)
+            {
+                Node<T> currentNode = new Node<T>(value);
+
+                _root = currentNode;
+                _tail = _root;
+                ++Length;
+            }
+            else
+            {
+                Node<T> currentNode = new Node<T>(value);
+
+                _tail.Next = currentNode;
+                _tail = currentNode;
+                _tail.Next = null;
+                ++Length;
+            }
+        }
+
+
+
+        public void AddFirst(T value)
+        {
+            Node<T> insertNode = new Node<T>(value);
+
+            insertNode.Next = _root;
+            _root = insertNode;
+            ++Length;
+        }
+        public void AddByIndex(T value, int index)
+        {
+            if (index >= 0 && index <= Length)
+            {
+                if (index == 0)
+                {
+                    AddFirst(value);
+                }
+                else if (index == Length - 1)
+                {
+                    Add(value);
+                }
+                else
+                {
+                    Node<T> insertNode = new Node<T>(value);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
+
+                    insertNode.Next = currentNode.Next;
+                    currentNode.Next = insertNode;
+                    ++Length;
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public void AddList(LinkedList<T> list)
+        {
+            if (list.Length != 0)
+            {
+                if (_tail is null)
+                {
+                    _root = list._root;
+                }
+                else
+                {
+                    _tail.Next = list._root;
+                    _tail = list._tail;
+                }
+
+                Length += list.Length;
+            }
+        }
+
+        public void AddListFirst(LinkedList<T> list)
+        {
+            if (list.Length != 0)
+            {
+                list._tail.Next = _root;
+                _root = list._root;
+                Length += list.Length;
+            }
+        }
+
+        public void AddListByIndex(LinkedList<T> list, int index)
+        {
+            if (index >= 0 && index < Length)
+            {
+                if (index == 0)
+                {
+                    AddListFirst(list);
+                }
+                else if (index == Length - 1)
+                {
+                    AddList(list);
+                }
+                else
+                {
+                    Node<T> currentNode = GetNodeByIndex(index-1);
+
+                    list._tail.Next = currentNode.Next;
+                    currentNode.Next = list._root;
+                    Length += list.Length;
+                }
+            }
+            else
+            {
+                throw new IndexOutOfRangeException();
+            }
+        }
+
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
