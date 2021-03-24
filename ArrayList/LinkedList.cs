@@ -127,9 +127,15 @@ namespace List
 
             return -1;
         }
+
         public T GetMin()
         {
             return this[GetIndexMinValue()+1];
+        }
+
+        public T GetMax()
+        {
+            return this[GetIndexMaxValue() + 1];
         }
 
         public override bool Equals(object obj)

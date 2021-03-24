@@ -48,5 +48,19 @@ namespace List.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestCase(new int[] { 0, 1, 2, 3, 4, 5 }, 5)]
+        [TestCase(new int[] { -5, -4, -3, -2, -1, 0 }, 0)]
+        [TestCase(new int[] { 0 }, 0)]
+        [TestCase(new int[] { 100, 200, 300, 400, 500, -1000 }, 500)]
+        [TestCase(new int[] { -999999, 99999, 1, 0, 542 }, 99999)]
+        public void GetMax_WhenValidListPassed_ShouldReturnMaxValueInList(int[] actualArray, int expected)
+        {
+            LinkedList<int> array = new LinkedList<int>(actualArray);
+
+            int actual = array.GetMax();
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
