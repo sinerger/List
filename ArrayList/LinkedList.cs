@@ -79,6 +79,28 @@ namespace List
             }
         }
 
+        public void Revers()
+        {
+            if (Length > 0)
+            {
+                Node<T> previous = null;
+                Node<T> current = _root;
+                Node<T> following = _root;
+
+                while (!(current is null!))
+                {
+                    following = following.Next;
+                    current.Next = previous;
+                    previous = current;
+                    current = following;
+                }
+
+                current = _root;
+                _root = _tail;
+                _tail = _root;
+            }
+        }
+
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
