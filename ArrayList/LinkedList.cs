@@ -181,7 +181,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> current = GetNodeByIndex(index: count);
+                    Node<T> current = GetNodeByIndex(index: count-1);
 
                     _root = current.Next;
                     Length -= count;
@@ -306,7 +306,7 @@ namespace List
 
                 do
                 {
-                    if (!(currentListNode is null) || !(currentThisNode is null))
+                    if (!(currentListNode.Next is null) || !(currentThisNode.Next is null))
                     {
                         if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
                         {
