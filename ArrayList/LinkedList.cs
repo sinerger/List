@@ -29,15 +29,25 @@ namespace List
         {
             get
             {
-                Node<T> currentNode = GetNodeByIndex(index);
+                if (index >= 0 && index < Length)
+                {
+                    Node<T> currentNode = GetNodeByIndex(index);
 
-                return currentNode.Value;
+                    return currentNode.Value;
+                }
+
+                throw new IndexOutOfRangeException();
             }
             set
             {
-                Node<T> currentNode = GetNodeByIndex(index);
+                if (index >= 0 && index < Length)
+                {
+                    Node<T> currentNode = GetNodeByIndex(index);
 
-                currentNode.Value = value;
+                    currentNode.Value = value;
+                }
+
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -287,6 +297,7 @@ namespace List
                 Node<T> currentNode = new Node<T>(value);
 
                 _root = currentNode;
+                _tail = _root;
                 ++Length;
             }
             else
@@ -294,9 +305,13 @@ namespace List
                 Node<T> currentNode = new Node<T>(value);
 
                 _tail.Next = currentNode;
+                _tail = currentNode;
+                _tail.Next = null;
                 ++Length;
             }
         }
+
+
 
         public void AddFirst(T value)
         {
@@ -321,7 +336,7 @@ namespace List
                 else
                 {
                     Node<T> insertNode = new Node<T>(value);
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     insertNode.Next = currentNode.Next;
                     currentNode.Next = insertNode;
@@ -376,7 +391,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     list._tail.Next = currentNode.Next;
                     currentNode.Next = list._root;
@@ -405,18 +420,16 @@ namespace List
 
                 do
                 {
-                    if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                    if (!(currentListNode is null) || !(currentThisNode is null))
                     {
-                        return false;
-                    }
+                        if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                        {
+                            return false;
+                        }
 
-                    if ((currentListNode.Next is null) || (currentThisNode.Next is null))
-                    {
-                        break;
+                        currentListNode = currentListNode.Next;
+                        currentThisNode = currentThisNode.Next;
                     }
-
-                    currentListNode = currentListNode.Next;
-                    currentThisNode = currentThisNode.Next;
                 }
                 while (!(currentThisNode.Next is null));
 
@@ -449,7 +462,7 @@ namespace List
         {
             Node<T> currentNode = _root;
 
-            for (int i = 1; i < index; i++)
+            for (int i = 0; i < index; i++)
             {
                 currentNode = currentNode.Next;
             }
