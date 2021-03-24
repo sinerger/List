@@ -89,6 +89,65 @@ namespace List
             }
         }
 
+        public int GetIndexMinValue()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T minValue = current.Value;
+                int indexMinValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(minValue) == -1)
+                    {
+                        minValue = current.Value;
+                        indexMinValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMinValue;
+            }
+
+            return -1;
+        }
+        public int GetIndexMaxValue()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T maxValue = current.Value;
+                int indexMaxValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                        indexMaxValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMaxValue;
+            }
+
+            return -1;
+        }
+
+        public T GetMin()
+        {
+            return this[GetIndexMinValue() + 1];
+        }
+
+        public T GetMax()
+        {
+            return this[GetIndexMaxValue() + 1];
+        }
+
         public void Remove()
         {
             if (Length > 0)
@@ -457,9 +516,13 @@ namespace List
 
             return result.ToString().Trim();
         }
-
+        
         private Node<T> GetNodeByIndex(int index)
         {
+            Node<T> currentNode = _root;
+            
+            for (int i = 1; i < index; i++)
+            {
             Node<T> currentNode = _root;
 
             for (int i = 0; i < index; i++)
