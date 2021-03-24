@@ -96,6 +96,7 @@ namespace List
                 Node<T> currentNode = new Node<T>(value);
 
                 _root = currentNode;
+                _tail = _root;
                 ++Length;
             }
             else
@@ -103,6 +104,8 @@ namespace List
                 Node<T> currentNode = new Node<T>(value);
 
                 _tail.Next = currentNode;
+                _tail = currentNode;
+                _tail.Next = null;
                 ++Length;
             }
         }
@@ -132,7 +135,7 @@ namespace List
                 else
                 {
                     Node<T> insertNode = new Node<T>(value);
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     insertNode.Next = currentNode.Next;
                     currentNode.Next = insertNode;
@@ -187,7 +190,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     list._tail.Next = currentNode.Next;
                     currentNode.Next = list._root;

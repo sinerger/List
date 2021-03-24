@@ -7,16 +7,22 @@ namespace List.Tests
 {
     class LinkedListTests
     {
-        [TestCase(100, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 100 })]
-        [TestCase(-10, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, -10 })]
-        [TestCase(0, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 0 })]
-        [TestCase(10, new int[] { }, new int[] { 10 })]
-        public void Add_WhenValidValuePassed_ShouldAddToListinLastPosition(int value, int[] actualArray, int[] expectedArray)
+        [TestCase(100,1, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 100 })]
+        [TestCase(-10,2, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, -10, -10 })]
+        [TestCase(0,3, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 0,0,0 })]
+        [TestCase(10,4, new int[] { }, new int[] { 10, 10, 10, 10, })]
+        [TestCase(10, 6, new int[] { }, new int[] { 10, 10, 10, 10, 10, 10, })]
+        [TestCase(10, 7, new int[] { }, new int[] { 10, 10, 10, 10, 10, 10, 10, })]
+        [TestCase(10, 8, new int[] { }, new int[] { 10, 10, 10, 10, 10, 10, 10, 10, })]
+        public void Add_WhenValidValuePassed_ShouldAddToListinLastPosition(int value, int count, int[] actualArray, int[] expectedArray)
         {
             LinkedList<int> actual = new LinkedList<int>(actualArray);
             LinkedList<int> expected = new LinkedList<int>(expectedArray);
 
-            actual.Add(value);
+            for (int i = 0; i < count; i++)
+            {
+                actual.Add(value);
+            }
 
             Assert.AreEqual(expected, actual);
         }
@@ -74,7 +80,7 @@ namespace List.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(0, new int[] { 1, 2, 3, 4, 5 }, new int[] { 10, 20, 30, 40, 50, 60, 70,1, 2, 3, 4, 5 })]
+        [TestCase(0, new int[] { 1, 2, 3, 4, 5 }, new int[] { 10, 20, 30, 40, 50, 60, 70, 1, 2, 3, 4, 5 })]
         [TestCase(1, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 10, 20, 30, 40, 50, 60, 70, 2, 3, 4, 5 })]
         [TestCase(2, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 10, 20, 30, 40, 50, 60, 70, 3, 4, 5 })]
         [TestCase(3, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 10, 20, 30, 40, 50, 60, 70, 4, 5 })]
