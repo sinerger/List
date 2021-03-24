@@ -130,7 +130,7 @@ namespace List
 
         public T GetMin()
         {
-            return this[GetIndexMinValue()+1];
+            return this[GetIndexMinValue() + 1];
         }
 
         public T GetMax()
