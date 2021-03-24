@@ -29,15 +29,25 @@ namespace List
         {
             get
             {
-                Node<T> currentNode = GetNodeByIndex(index);
+                if (index >= 0 && index < Length)
+                {
+                    Node<T> currentNode = GetNodeByIndex(index);
 
-                return currentNode.Value;
+                    return currentNode.Value;
+                }
+
+                throw new IndexOutOfRangeException();
             }
             set
             {
-                Node<T> currentNode = GetNodeByIndex(index);
+                if (index >= 0 && index < Length)
+                {
+                    Node<T> currentNode = GetNodeByIndex(index);
 
-                currentNode.Value = value;
+                    currentNode.Value = value;
+                }
+
+                throw new IndexOutOfRangeException();
             }
         }
 
@@ -193,23 +203,29 @@ namespace List
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
+
             if (this.Length == list.Length)
             {
+                if (this.Length == 0 && list.Length == 0)
+                {
+                    return true;
+                }
+
                 Node<T> currentThisNode = this._root;
                 Node<T> currentListNode = list._root;
 
                 do
                 {
-                    if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                    if (!(currentListNode is null) || !(currentThisNode is null))
                     {
-                        return false;
+                        if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                        {
+                            return false;
+                        }
+
+                        currentListNode = currentListNode.Next;
+                        currentThisNode = currentThisNode.Next;
                     }
-                    if ((currentListNode.Next is null) || (currentThisNode.Next is null))
-                    {
-                        break;
-                    }
-                    currentListNode = currentListNode.Next;
-                    currentThisNode = currentThisNode.Next;
                 }
                 while (!(currentThisNode.Next is null));
 
@@ -222,9 +238,11 @@ namespace List
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(string.Empty);
+
             if (Length != 0)
             {
                 Node<T> currentNode = _root;
+
                 result.Append(currentNode.Value + " ");
                 while (!(currentNode.Next is null))
                 {
@@ -233,13 +251,14 @@ namespace List
                 }
             }
 
-            return result.ToString();
+            return result.ToString().Trim();
         }
 
         private Node<T> GetNodeByIndex(int index)
         {
             Node<T> currentNode = _root;
-            for (int i = 1; i < index; i++)
+
+            for (int i = 0; i < index; i++)
             {
                 currentNode = currentNode.Next;
             }
