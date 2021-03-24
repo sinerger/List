@@ -103,6 +103,31 @@ namespace List
 
             return -1;
         }
+        public int GetIndexMaxValue()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T maxValue = current.Value;
+                int indexMaxValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                        indexMaxValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMaxValue;
+            }
+
+            return -1;
+        }
+
 
         public override bool Equals(object obj)
         {
