@@ -44,7 +44,6 @@ namespace List
         private int _length;
         private Node<T> _root;
         private Node<T> _tail;
-        private Node<T> _mid;
 
         public LinkedList()
         {
@@ -69,11 +68,6 @@ namespace List
                 _tail = _root;
                 for (int i = 1; i < values.Length; i++)
                 {
-                    if (Length / 2 == i)
-                    {
-                        _mid = _tail;
-                    }
-
                     _tail.Next = new Node<T>(values[i]);
                     _tail = _tail.Next;
                 }
@@ -143,16 +137,7 @@ namespace List
 
         private Node<T> GetNodeByIndex(int index)
         {
-            Node<T> currentNode = null;
-
-            if (index > Length / 2)
-            {
-                currentNode = _mid;
-            }
-            else
-            {
-                currentNode = _root;
-            }
+            Node<T> currentNode = _root;
 
             for (int i = 1; i < index; i++)
             {
