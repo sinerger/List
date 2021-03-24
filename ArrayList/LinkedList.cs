@@ -97,6 +97,8 @@ namespace List
             }
         }
 
+
+
         public void AddFirst(T value)
         {
             Node<T> insertNode = new Node<T>(value);
