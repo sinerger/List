@@ -129,7 +129,7 @@ namespace List
         }
         public T GetMin()
         {
-            return this[GetIndexMinValue()];
+            return this[GetIndexMinValue()+1];
         }
 
         public override bool Equals(object obj)
