@@ -232,7 +232,7 @@ namespace List
                 Node<T> current = _root;
                 int index = 0;
 
-                while(!(current is null))
+                while (!(current is null))
                 {
                     if (current.Value.CompareTo(value) == 0)
                     {
@@ -255,7 +255,29 @@ namespace List
 
         public int RemoveAllByValue(T value)
         {
-            return 0;
+            if (value != null)
+            {
+                Node<T> current = _root;
+                int count = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(value) == 0)
+                    {
+                        RemoveByIndex(i);
+                        --i;
+                    }
+
+                    ++count;
+                    current = current.Next;
+                }
+
+                return count;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid count");
+            }
         }
 
         public override bool Equals(object obj)

@@ -173,6 +173,28 @@ namespace List.Tests
             Assert.Throws<ArgumentException>(() => actual.RemoveByValue(value));
         }
 
+        [TestCase(100, new int[] { 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(100, new int[] { 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(100, new int[] { 100, 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(100, new int[] { 100, 100, 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(100, new int[] { 100, 100, 100, 100, 100, 100, 100, 0 }, new int[] { 0 })]
+        [TestCase(100, new int[] { 100 }, new int[] { })]
+        public void RemoveAllByValue_WhenValidValuePassed_SholdRemoveAllElementByValue(int value, int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> actual = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
 
+            actual.RemoveAllByValue(value);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(null, new string[] { "100", "1", "2", "3", "4", "5" })]
+        public void RemoveAllByValue_WhenInalidValuePassed_SholdReturnArgumentException(string value, string[] actualArray)
+        {
+            LinkedList<string> actual = new LinkedList<string>(actualArray);
+
+            Assert.Throws<ArgumentException>(() => actual.RemoveAllByValue(value));
+        }
     }
 }
