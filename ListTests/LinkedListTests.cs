@@ -5,6 +5,19 @@ namespace List.Tests
 {
     class LinkedListTests
     {
+        [TestCase(new int[] { 0, 1, 2, 3, 4, 5 }, 0)]
+        [TestCase(new int[] { -5, -4, -3, -2, -1, 0 }, 0)]
+        [TestCase(new int[] { 0 }, 0)]
+        [TestCase(new int[] { 100, 200, 300, 400, 500, -1000 }, 5)]
+        [TestCase(new int[] { -999999, 99999, 1, 0, 542 }, 0)]
+        [TestCase(new int[] {  }, -1)]
+        public void GetIndexMinValue_WhenValidListPassed_ShouldReturnIndexMinValueInList(int[] actualArray, int expected)
+        {
+            LinkedList<int> array = new LinkedList<int>(actualArray);
 
+            int actual = array.GetIndexMinValue();
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

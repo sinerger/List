@@ -79,6 +79,31 @@ namespace List
             }
         }
 
+        public int GetIndexMinValue()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T minValue = current.Value;
+                int indexMinValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(minValue) == -1)
+                    {
+                        minValue = current.Value;
+                        indexMinValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMinValue;
+            }
+
+            return -1;
+        }
+
         public override bool Equals(object obj)
         {
             LinkedList<T> list = (LinkedList<T>)obj;
