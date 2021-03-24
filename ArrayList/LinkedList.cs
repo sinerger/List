@@ -237,6 +237,7 @@ namespace List
                     if (current.Value.CompareTo(value) == 0)
                     {
                         RemoveByIndex(index);
+
                         return index;
                     }
 
