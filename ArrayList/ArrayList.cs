@@ -13,14 +13,7 @@ namespace List
             }
             private set
             {
-                if (value >= 0)
-                {
-                    _length = value;
-                }
-                else if (value < 0)
-                {
-                    _length = 0;
-                }
+                _length = value >= 0 ? value : 0;
             }
         }
 
@@ -37,7 +30,7 @@ namespace List
             }
             set
             {
-                if (index >= 0 && index < _array.Length)
+                if (index >= 0 && index < Length)
                 {
                     _array[index] = value;
                 }
