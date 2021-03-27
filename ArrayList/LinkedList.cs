@@ -14,14 +14,7 @@ namespace List
             }
             set
             {
-                if (value >= 0)
-                {
-                    _length = value;
-                }
-                else
-                {
-                    _length = 0;
-                }
+                _length = value >= 0 ? value : 0;
             }
         }
 
@@ -31,7 +24,7 @@ namespace List
             {
                 if (index >= 0 && index < Length)
                 {
-                    Node<T> currentNode = GetNodeByIndex(index+1);
+                    Node<T> currentNode = GetNodeByIndex(index);
 
                     return currentNode.Value;
                 }
@@ -240,7 +233,7 @@ namespace List
                     }
                     else
                     {
-                        Node<T> current = GetNodeByIndex(index);
+                        Node<T> current = GetNodeByIndex(index-1);
 
                         current.Next = current.Next.Next;
                         --Length;
@@ -293,7 +286,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> current = GetNodeByIndex(index: count);
+                    Node<T> current = GetNodeByIndex(index: count-1);
 
                     _root = current.Next;
                     Length -= count;
@@ -321,7 +314,7 @@ namespace List
                 {
                     if (count + index >= Length)
                     {
-                        Node<T> current = GetNodeByIndex(index);
+                        Node<T> current = GetNodeByIndex(index-1);
 
                         current.Next = null;
                         _tail = current;
@@ -329,8 +322,8 @@ namespace List
                     }
                     else
                     {
-                        Node<T> startRemoveRangeNode = GetNodeByIndex(index);
-                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count);
+                        Node<T> startRemoveRangeNode = GetNodeByIndex(index-1);
+                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count-1);
 
                         startRemoveRangeNode.Next = finishRemoveRangeNode.Next;
                         Length -= count;
@@ -381,19 +374,29 @@ namespace List
             if (value != null)
             {
                 Node<T> current = _root;
+                Node<T> previuos = _root;
                 int count = 0;
 
                 for (int i = 0; i < Length; i++)
                 {
-                    if (current.Value.CompareTo(value) == 0)
+                    if (_root.Value.CompareTo(value) == 0)
                     {
-                        RemoveByIndex(i);
+                        _root = _root.Next;
+                    }
+                    
+                    if(current.Value.CompareTo(value) == 0)
+                    {
+                        previuos.Next = current.Next;
                         --i;
+                        --Length;
+                        ++count;
                     }
 
-                    ++count;
+                    previuos = current;
                     current = current.Next;
                 }
+
+                _tail = GetNodeByIndex(Length - 1);
 
                 return count;
             }
@@ -448,7 +451,7 @@ namespace List
                 else
                 {
                     Node<T> insertNode = new Node<T>(value);
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     insertNode.Next = currentNode.Next;
                     currentNode.Next = insertNode;
@@ -502,7 +505,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    Node<T> currentNode = GetNodeByIndex(index-1);
 
                     list._tail.Next = currentNode.Next;
                     currentNode.Next = list._root;
@@ -515,67 +518,12 @@ namespace List
             }
         }
 
-        public LinkedList<T> Sort(LinkedList<T> list)
+        public LinkedList<T> Sort(bool isDescending)
         {
-            if (list.Length <= 1)
-            {
-                return list;
-            }
-
-            LinkedList<T> leftList = new LinkedList<T>();
-            LinkedList<T> rightList = new LinkedList<T>();
-            int mid = list.Length / 2;
-
-            for (int i = 0; i < list.Length; i++)
-            {
-                if (i < mid)
-                {
-                    leftList.Add(list[i]);
-                }
-                else
-                {
-                    rightList.Add(list[i]);
-                }
-            }
-
-            leftList = Sort(leftList);
-            rightList = Sort(rightList);
-
-            return Merge(leftList, rightList);
-        }
-
-        private LinkedList<T> Merge(LinkedList<T> leftList, LinkedList<T> rightList)
-        {
-            LinkedList<T> result = new LinkedList<T>();
-
-            while (leftList.Length != 0 || rightList.Length != 0)
-            {
-                if (leftList.Length != 0 && rightList.Length != 0)
-                {
-                    if (leftList[0].CompareTo(rightList[0]) == -1 || leftList[0].CompareTo(rightList[0]) == 0)
-                    {
-                        result.Add(leftList[0]);
-                        leftList.RemoveFirst();
-                    }
-                    else
-                    {
-                        result.Add(rightList[0]);
-                        rightList.RemoveFirst();
-                    }
-                }
-                else if (leftList.Length != 0)
-                {
-                    result.Add(leftList[0]);
-                    leftList.RemoveFirst();
-                }
-                else if (rightList.Length != 0)
-                {
-                    result.Add(rightList[0]);
-                    rightList.RemoveFirst();
-                }
-            }
-
-            return result;
+            LinkedList<T> list = new LinkedList<T>();
+            list._root = this._root;
+            list.Length = this.Length;
+            return MergeSort(list,isDescending);
         }
 
         public override bool Equals(object obj)
@@ -632,11 +580,75 @@ namespace List
             return result.ToString().Trim();
         }
 
+        private LinkedList<T> MergeSort(LinkedList<T> list,bool isDescending)
+        {
+            if (list.Length <= 1)
+            {
+                return list;
+            }
+
+            LinkedList<T> leftList = new LinkedList<T>();
+            LinkedList<T> rightList = new LinkedList<T>();
+            int mid = list.Length / 2;
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (i < mid)
+                {
+                    leftList.Add(list[i]);
+                }
+                else
+                {
+                    rightList.Add(list[i]);
+                }
+            }
+
+            leftList = MergeSort(leftList, isDescending);
+            rightList = MergeSort(rightList, isDescending);
+
+            return Merge(leftList, rightList, isDescending);
+        }
+        private LinkedList<T> Merge(LinkedList<T> leftList, LinkedList<T> rightList, bool isDescending)
+        {
+            var coef = isDescending ? -1 : 1;
+
+            LinkedList<T> result = new LinkedList<T>();
+
+            while (leftList.Length != 0 || rightList.Length != 0)
+            {
+                if (leftList.Length != 0 && rightList.Length != 0)
+                {
+                    if (leftList[0].CompareTo(rightList[0]) == coef || leftList[0].CompareTo(rightList[0]) == 0)
+                    {
+                        result.Add(leftList[0]);
+                        leftList.RemoveFirst();
+                    }
+                    else
+                    {
+                        result.Add(rightList[0]);
+                        rightList.RemoveFirst();
+                    }
+                }
+                else if (leftList.Length != 0)
+                {
+                    result.Add(leftList[0]);
+                    leftList.RemoveFirst();
+                }
+                else if (rightList.Length != 0)
+                {
+                    result.Add(rightList[0]);
+                    rightList.RemoveFirst();
+                }
+            }
+
+            return result;
+        }
+
         private Node<T> GetNodeByIndex(int index)
         {
             Node<T> currentNode = _root;
 
-            for (int i = 0; i < index - 1; i++)
+            for (int i = 0; i < index; i++)
             {
                 currentNode = currentNode.Next;
             }

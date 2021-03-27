@@ -17,7 +17,22 @@ namespace List.Tests
             LinkedList<int> expected = new LinkedList<int>(expectedArray);
             LinkedList<int> actual;
 
-            actual = list.Sort(list);
+            actual = list.Sort(true);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(new int[] { 5, 12, -14, 0, 1 }, new int[] { 12, 5, 1, 0, -14 })]
+        [TestCase(new int[] { 0, 0, 0, 0, 0 }, new int[] { 0, 0, 0, 0, 0 })]
+        [TestCase(new int[] { }, new int[] { })]
+        [TestCase(new int[] { 100 }, new int[] { 100 })]
+        public void Sort_WhenValidSortPasse_ShouldSortingListDescending(int[] actualArray, int[] expectedArray)
+        {
+            LinkedList<int> list = new LinkedList<int>(actualArray);
+            LinkedList<int> expected = new LinkedList<int>(expectedArray);
+            LinkedList<int> actual;
+
+            actual = list.Sort(false);
 
             Assert.AreEqual(expected, actual);
         }
@@ -376,6 +391,7 @@ namespace List.Tests
         [TestCase(100, new int[] { 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
         [TestCase(100, new int[] { 100, 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
         [TestCase(100, new int[] { 100, 100, 100, 100, 100, 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5 })]
+        [TestCase(100, new int[] { 100, 1, 100, 2, 100, 3, 100, 4, 100, 5, 100 }, new int[] { 1, 2, 3, 4, 5 })]
         [TestCase(100, new int[] { 100, 100, 100, 100, 100, 100, 100, 0 }, new int[] { 0 })]
         [TestCase(100, new int[] { 100 }, new int[] { })]
         public void RemoveAllByValue_WhenValidValuePassed_SholdRemoveAllElementByValue(int value, int[] actualArray, int[] expectedArray)
@@ -383,7 +399,7 @@ namespace List.Tests
             LinkedList<int> actual = new LinkedList<int>(actualArray);
             LinkedList<int> expected = new LinkedList<int>(expectedArray);
 
-            actual.RemoveAllByValue(value);
+            int i = actual.RemoveAllByValue(value);
 
             Assert.AreEqual(expected, actual);
         }
