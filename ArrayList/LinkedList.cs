@@ -82,7 +82,7 @@ namespace List
             }
         }
 
-        public void Revers()
+        public void Reverse()
         {
             if (Length > 0)
             {
@@ -186,12 +186,53 @@ namespace List
 
         public T GetMin()
         {
-            return this[GetIndexMinValue()];
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T MinValue = current.Value;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(MinValue) == -1)
+                    {
+                        MinValue = current.Value;
+                    }
+
+                    current = current.Next;
+                }
+
+                return MinValue;
+            }
+            else
+            {
+                throw new ArgumentException("Array no contain elements");
+            }
+
         }
 
         public T GetMax()
         {
-            return this[GetIndexMaxValue()];
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T maxValue = current.Value;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                    }
+
+                    current = current.Next;
+                }
+
+                return maxValue;
+            }
+            else
+            {
+                throw new ArgumentException("Array no contain elements");
+            }
         }
 
         public void Remove()
@@ -233,7 +274,7 @@ namespace List
                     }
                     else
                     {
-                        Node<T> current = GetNodeByIndex(index-1);
+                        Node<T> current = GetNodeByIndex(index - 1);
 
                         current.Next = current.Next.Next;
                         --Length;
@@ -286,7 +327,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> current = GetNodeByIndex(index: count-1);
+                    Node<T> current = GetNodeByIndex(index: count - 1);
 
                     _root = current.Next;
                     Length -= count;
@@ -314,7 +355,7 @@ namespace List
                 {
                     if (count + index >= Length)
                     {
-                        Node<T> current = GetNodeByIndex(index-1);
+                        Node<T> current = GetNodeByIndex(index - 1);
 
                         current.Next = null;
                         _tail = current;
@@ -322,8 +363,8 @@ namespace List
                     }
                     else
                     {
-                        Node<T> startRemoveRangeNode = GetNodeByIndex(index-1);
-                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count-1);
+                        Node<T> startRemoveRangeNode = GetNodeByIndex(index - 1);
+                        Node<T> finishRemoveRangeNode = GetNodeByIndex(index + count - 1);
 
                         startRemoveRangeNode.Next = finishRemoveRangeNode.Next;
                         Length -= count;
@@ -383,8 +424,8 @@ namespace List
                     {
                         _root = _root.Next;
                     }
-                    
-                    if(current.Value.CompareTo(value) == 0)
+
+                    if (current.Value.CompareTo(value) == 0)
                     {
                         previuos.Next = current.Next;
                         --i;
@@ -451,7 +492,7 @@ namespace List
                 else
                 {
                     Node<T> insertNode = new Node<T>(value);
-                    Node<T> currentNode = GetNodeByIndex(index-1);
+                    Node<T> currentNode = GetNodeByIndex(index - 1);
 
                     insertNode.Next = currentNode.Next;
                     currentNode.Next = insertNode;
@@ -481,6 +522,7 @@ namespace List
                 Length += list.Length;
             }
         }
+
         public void AddListFirst(LinkedList<T> list)
         {
             if (list.Length != 0)
@@ -505,7 +547,7 @@ namespace List
                 }
                 else
                 {
-                    Node<T> currentNode = GetNodeByIndex(index-1);
+                    Node<T> currentNode = GetNodeByIndex(index - 1);
 
                     list._tail.Next = currentNode.Next;
                     currentNode.Next = list._root;
@@ -523,42 +565,47 @@ namespace List
             LinkedList<T> list = new LinkedList<T>();
             list._root = this._root;
             list.Length = this.Length;
-            return MergeSort(list,isDescending);
+            return MergeSort(list, isDescending);
         }
 
         public override bool Equals(object obj)
         {
-            LinkedList<T> list = (LinkedList<T>)obj;
-
-            if (this.Length == list.Length)
+            if (!(obj is null))
             {
-                if (this.Length == 0 && list.Length == 0)
+                LinkedList<T> list = (LinkedList<T>)obj;
+
+                if (this.Length == list.Length)
                 {
+                    if (this.Length == 0 && list.Length == 0)
+                    {
+                        return true;
+                    }
+
+                    Node<T> currentThisNode = this._root;
+                    Node<T> currentListNode = list._root;
+
+                    do
+                    {
+                        if (!(currentListNode.Next is null) || !(currentThisNode.Next is null))
+                        {
+                            if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
+                            {
+                                return false;
+                            }
+
+                            currentListNode = currentListNode.Next;
+                            currentThisNode = currentThisNode.Next;
+                        }
+                    }
+                    while (!(currentThisNode.Next is null));
+
                     return true;
                 }
 
-                Node<T> currentThisNode = this._root;
-                Node<T> currentListNode = list._root;
-
-                do
-                {
-                    if (!(currentListNode.Next is null) || !(currentThisNode.Next is null))
-                    {
-                        if (currentThisNode.Value.CompareTo(currentListNode.Value) != 0)
-                        {
-                            return false;
-                        }
-
-                        currentListNode = currentListNode.Next;
-                        currentThisNode = currentThisNode.Next;
-                    }
-                }
-                while (!(currentThisNode.Next is null));
-
-                return true;
+                return false;
             }
 
-            return false;
+            throw new ArgumentNullException();
         }
 
         public override string ToString()
@@ -580,7 +627,7 @@ namespace List
             return result.ToString().Trim();
         }
 
-        private LinkedList<T> MergeSort(LinkedList<T> list,bool isDescending)
+        private LinkedList<T> MergeSort(LinkedList<T> list, bool isDescending)
         {
             if (list.Length <= 1)
             {

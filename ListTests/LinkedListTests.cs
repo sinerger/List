@@ -46,7 +46,7 @@ namespace List.Tests
             LinkedList<int> actual = new LinkedList<int>(actualArray);
             LinkedList<int> expected = new LinkedList<int>(expectedArray);
 
-            actual.Revers();
+            actual.Reverse();
 
             Assert.AreEqual(expected, actual);
         }
