@@ -187,7 +187,7 @@ namespace List.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(null, new string[] { "100", "1", "2", "3", "4", "5" })]
+        [TestCase(null, new string[] { "1", "2", "3", "4", "5" })]
         public void RemoveElementByValue_WhenInvalidValuePassed_SholdReturnArgumentException(string value, string[] actualArray)
         {
             ArrayList<string> actual = new ArrayList<string>(actualArray);

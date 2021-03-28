@@ -5,6 +5,10 @@ namespace List
 {
     public class ArrayList<T> where T : IComparable<T>
     {
+        private int _length;
+        private T[] _array;
+        private int _initLength = 10;
+
         public int Length
         {
             get
@@ -39,9 +43,6 @@ namespace List
             }
         }
 
-        private int _length;
-        private T[] _array;
-        private int _initLength = 10;
         public ArrayList()
         {
             Length = 0;
@@ -50,16 +51,9 @@ namespace List
 
         public ArrayList(T value)
         {
-            if (value != null)
-            {
-                Length = 1;
-                _array = new T[_initLength];
-                _array[0] = value;
-            }
-            else
-            {
-                throw new ArgumentException("Values is null");
-            }
+            Length = 1;
+            _array = new T[_initLength];
+            _array[0] = value;
         }
 
         public ArrayList(T[] values)
@@ -104,24 +98,27 @@ namespace List
         /// <param index="index">Index by which the value is inserted.</param>
         public void AddByIndex(T value, int index)
         {
-            if (index >= 0 && index <= Length)
+            if (value != null)
             {
-                if (Length >= _array.Length)
+                if (index >= 0 && index <= Length)
                 {
-                    UpSize();
-                }
+                    if (Length >= _array.Length)
+                    {
+                        UpSize();
+                    }
 
-                for (int i = Length; i > index; i--)
+                    for (int i = Length; i > index; i--)
+                    {
+                        _array[i] = _array[i - 1];
+                    }
+
+                    _array[index] = value;
+                    ++Length;
+                }
+                else
                 {
-                    _array[i] = _array[i - 1];
+                    throw new IndexOutOfRangeException();
                 }
-
-                _array[index] = value;
-                ++Length;
-            }
-            else
-            {
-                throw new IndexOutOfRangeException();
             }
         }
 
