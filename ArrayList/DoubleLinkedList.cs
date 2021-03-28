@@ -4,8 +4,12 @@ using System.Text;
 
 namespace List
 {
-    public class DoubleLinkedList<T> where T: IComparable<T>
+    public class DoubleLinkedList<T> where T : IComparable<T>
     {
+        private int _length;
+        private DoubleLinkedListNode<T> _root;
+        private DoubleLinkedListNode<T> _tail;
+
         public int Length
         {
             get
@@ -43,10 +47,6 @@ namespace List
                 throw new IndexOutOfRangeException();
             }
         }
-
-        private int _length;
-        private DoubleLinkedListNode<T> _root;
-        private DoubleLinkedListNode<T> _tail;
 
         public DoubleLinkedList()
         {
@@ -160,6 +160,7 @@ namespace List
 
             return -1;
         }
+
         public int GetIndexMaxValue()
         {
             if (Length > 0)
@@ -296,6 +297,7 @@ namespace List
                 throw new IndexOutOfRangeException();
             }
         }
+
         public void RemoveRange(int count)
         {
             if (Length > 0 && count >= 0)
@@ -426,7 +428,7 @@ namespace List
         {
             if (value != null)
             {
-                if(Length == 1)
+                if (Length == 1)
                 {
                     _root = null;
                     _tail = null;
@@ -445,11 +447,11 @@ namespace List
 
                     if (current.Value.CompareTo(value) == 0)
                     {
-                        if((current.Previous is null))
+                        if ((current.Previous is null))
                         {
                             current.Next.Previous = null;
                         }
-                        else if(current.Next is null)
+                        else if (current.Next is null)
                         {
                             current.Previous.Next = null;
                             _tail = current.Previous;
@@ -480,23 +482,16 @@ namespace List
         {
             if (_tail is null)
             {
-                DoubleLinkedListNode<T> currentNode = new DoubleLinkedListNode<T>(value);
-
-                _root = currentNode;
+                _root = new DoubleLinkedListNode<T>(value); ;
                 _tail = _root;
-                ++Length;
             }
             else
             {
-                DoubleLinkedListNode<T> currentNode = new DoubleLinkedListNode<T>(value);
-                var tempNode = _tail;
-
-                _tail.Next = currentNode;
-                _tail = currentNode;
-                _tail.Next = null;
-                _tail.Previous = tempNode;
-                ++Length;
+                _tail.Next = new DoubleLinkedListNode<T>(value);
+                _tail.Next.Previous = _tail;
+                _tail = _tail.Next;
             }
+            ++Length;
         }
 
         public void AddFirst(T value)
@@ -556,7 +551,7 @@ namespace List
 
         public void AddListFirst(DoubleLinkedList<T> list)
         {
-            if(Length == 0)
+            if (Length == 0)
             {
                 _root = list._root;
                 _tail = list._tail;
@@ -594,14 +589,16 @@ namespace List
                 throw new IndexOutOfRangeException();
             }
         }
-        
+
         public DoubleLinkedList<T> Sort(bool isDescending)
         {
             DoubleLinkedList<T> list = new DoubleLinkedList<T>();
             list._root = this._root;
             list._tail = this._tail;
             list.Length = this.Length;
-            return MergeSort(list, isDescending);
+            int coef = isDescending ? -1 : 1;
+
+            return MergeSort(list, coef);
         }
 
         public override bool Equals(object obj)
@@ -652,18 +649,18 @@ namespace List
             {
                 DoubleLinkedListNode<T> currentNode = _root;
 
-                result.Append(currentNode.Value + " ");
+                result.Append($"{ currentNode.Value} ");
                 while (!(currentNode.Next is null))
                 {
                     currentNode = currentNode.Next;
-                    result.Append(currentNode.Value + " ");
+                    result.Append($"{ currentNode.Value} ");
                 }
             }
 
             return result.ToString().Trim();
         }
 
-        private DoubleLinkedList<T> MergeSort(DoubleLinkedList<T> list, bool isDescending)
+        private DoubleLinkedList<T> MergeSort(DoubleLinkedList<T> list, int coef)
         {
             if (list.Length <= 1)
             {
@@ -686,16 +683,14 @@ namespace List
                 }
             }
 
-            leftList = MergeSort(leftList, isDescending);
-            rightList = MergeSort(rightList, isDescending);
+            leftList = MergeSort(leftList, coef);
+            rightList = MergeSort(rightList, coef);
 
-            return Merge(leftList, rightList, isDescending);
+            return Merge(leftList, rightList, coef);
         }
 
-        private DoubleLinkedList<T> Merge(DoubleLinkedList<T> leftList, DoubleLinkedList<T> rightList, bool isDescending)
+        private DoubleLinkedList<T> Merge(DoubleLinkedList<T> leftList, DoubleLinkedList<T> rightList, int coef)
         {
-            var coef = isDescending ? -1 : 1;
-
             DoubleLinkedList<T> result = new DoubleLinkedList<T>();
 
             while (leftList.Length != 0 || rightList.Length != 0)
@@ -732,7 +727,7 @@ namespace List
         {
 
             DoubleLinkedListNode<T> currentNode = null;
-            if(index < Length / 2+1)
+            if (index < Length / 2 + 1)
             {
                 currentNode = _root;
                 for (int i = 0; i < index; i++)
@@ -743,7 +738,7 @@ namespace List
             else
             {
                 currentNode = _tail;
-                for (int i = Length-1; i >index; i--)
+                for (int i = Length - 1; i > index; i--)
                 {
                     currentNode = currentNode.Previous;
                 }
