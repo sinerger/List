@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace List
 {
     public class LinkedList<T> where T : IComparable<T>
     {
+        private int _length;
+        private Node<T> _root;
+        private Node<T> _tail;
+
         public int Length
         {
             get
@@ -43,10 +46,6 @@ namespace List
                 throw new IndexOutOfRangeException();
             }
         }
-
-        private int _length;
-        private Node<T> _root;
-        private Node<T> _tail;
 
         public LinkedList()
         {
@@ -159,6 +158,7 @@ namespace List
 
             return -1;
         }
+
         public int GetIndexMaxValue()
         {
             if (Length > 0)
@@ -286,6 +286,7 @@ namespace List
                 throw new IndexOutOfRangeException();
             }
         }
+
         public void RemoveRange(int count)
         {
             if (Length > 0 && count >= 0)
@@ -451,18 +452,14 @@ namespace List
         {
             if (_tail is null)
             {
-                Node<T> currentNode = new Node<T>(value);
-
-                _root = currentNode;
+                _root = new Node<T>(value);
                 _tail = _root;
                 ++Length;
             }
             else
             {
-                Node<T> currentNode = new Node<T>(value);
-
-                _tail.Next = currentNode;
-                _tail = currentNode;
+                _tail.Next = new Node<T>(value);
+                _tail = _tail.Next;
                 _tail.Next = null;
                 ++Length;
             }
@@ -655,6 +652,7 @@ namespace List
 
             return Merge(leftList, rightList, isDescending);
         }
+
         private LinkedList<T> Merge(LinkedList<T> leftList, LinkedList<T> rightList, bool isDescending)
         {
             var coef = isDescending ? -1 : 1;
