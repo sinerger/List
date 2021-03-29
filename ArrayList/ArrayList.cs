@@ -1,9 +1,10 @@
-﻿using System;
+﻿using List;
+using System;
 using System.Text;
 
 namespace List
 {
-    public class ArrayList<T> where T : IComparable<T>
+    public class ArrayList<T> :IList<T> where T: IComparable<T>
     {
         private int _length;
         private T[] _array;
