@@ -4,7 +4,7 @@ using System.Text;
 
 namespace List
 {
-    class LinkedList
+    class LinkedList<T> : IList<T> where T : IComparable<T>
     {
     }
 }
