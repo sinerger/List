@@ -6,7 +6,6 @@ namespace List
 {
     public interface IList<T>
     {
-        public int Length { get; set; }
         public T this[int index] { get; set; }
 
         void Add(T value);
