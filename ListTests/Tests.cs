@@ -242,7 +242,7 @@ namespace List.Tests
         [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 4, 5 })]
         [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 5 })]
         [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4 })]
-        [TestCase(5, new int[] { 5, 5, 5, 5, 5, 5 }, new int[] { })]
+        [TestCase(5, new int[] { 5, 5, 5, 5, 5, 5 }, new int[] { 5, 5, 5, 5, 5 })]
         [TestCase(0, new int[] { 0 }, new int[] { })]
         public void RemoveByValue_WhenValidValuePassed_SholdRemoveFirstEntryElementByValue(int value, int[] actualArray, int[] expectedArray)
         {
