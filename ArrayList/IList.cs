@@ -6,46 +6,46 @@ namespace List
 {
     public interface IList<T>
     {
-        public void Add(T value);
+        void Add(T value);
 
-        public void AddFirst(T value);
+        void AddFirst(T value);
 
-        public void AddByIndex(int index, T value);
+        void AddByIndex(int index, T value);
 
-        public void AddRange(IList<T> list);
+        void AddRange(IList<T> list);
 
-        public void AddRangeFirst(IList<T> list);
+        void AddRangeFirst(IList<T> list);
 
-        public void AddRangeByIndex(IList<T> list, int index);
+        void AddRangeByIndex(IList<T> list, int index);
 
-        public void Remove();
+        void Remove();
 
-        public void RemoveFirst();
+        void RemoveFirst();
 
-        public void RemoveByIndex(int index);
+        void RemoveByIndex(int index);
 
-        public void RemoveRange(int count);
+        void RemoveRange(int count);
 
-        public void RemoveRangeFirst(int count);
+        void RemoveRangeFirst(int count);
 
-        public void RemoveRangeByIndex(int index, int count);
+        void RemoveRangeByIndex(int index, int count);
 
-        public int RemoveByValue(T value);
+        int RemoveByValue(T value);
 
-        public int RemoveAllByValue(T value);
+        int RemoveAllByValue(T value);
 
-        public void Reverse();
+        void Reverse();
 
-        public int GetIndex(T value);
+        int GetIndex(T value);
 
-        public T GetMin();
+        T GetMin();
 
-        public T GetMax();
+        T GetMax();
 
-        public int GetMinIndex();
+        int GetMinIndex();
 
-        public int GetMaxIndex();
+        int GetMaxIndex();
 
-        public IList<T> Sort(bool isDescending);
+        IList<T> Sort(bool isDescending);
     }
 }
