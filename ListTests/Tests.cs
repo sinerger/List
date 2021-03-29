@@ -3,8 +3,8 @@ using System;
 
 namespace List.Tests
 {
-    [TestFixture("ArrayList")]
-    [TestFixture("LinkedList")]
+    //[TestFixture("ArrayList")]
+    //[TestFixture("LinkedList")]
     [TestFixture("DoubleLinkedList")]
     public class Tests
     {
@@ -22,16 +22,16 @@ namespace List.Tests
         {
             switch (_parameter)
             {
-                case "ArrayList":
-                    actual = new ArrayList<int>(actualArray);
-                    expected = new ArrayList<int>(expectedArray);
-                    addedList = new ArrayList<int>(list);
-                    break;
-                case "LinkedList":
-                    actual = new LinkedList<int>(actualArray);
-                    expected = new LinkedList<int>(expectedArray);
-                    addedList = new LinkedList<int>(list);
-                    break;
+                //case "ArrayList":
+                //    actual = new ArrayList<int>(actualArray);
+                //    expected = new ArrayList<int>(expectedArray);
+                //    addedList = new ArrayList<int>(list);
+                //    break;
+                //case "LinkedList":
+                //    actual = new LinkedList<int>(actualArray);
+                //    expected = new LinkedList<int>(expectedArray);
+                //    addedList = new LinkedList<int>(list);
+                //    break;
                 case "DoubleLinkedList":
                     actual = new DoubleLinkedList<int>(actualArray);
                     expected = new DoubleLinkedList<int>(expectedArray);
@@ -84,7 +84,7 @@ namespace List.Tests
         {
             Setup(actualArray, expectedArray, null);
 
-            actual.AddByIndex(value, index);
+            actual.AddByIndex(index, value);
 
             Assert.AreEqual(expected, actual);
         }
@@ -242,7 +242,7 @@ namespace List.Tests
         [TestCase(3, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 4, 5 })]
         [TestCase(4, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 5 })]
         [TestCase(5, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4 })]
-        [TestCase(5, new int[] { 5, 5, 5, 5, 5, 5 }, new int[] { })]
+        [TestCase(5, new int[] { 5, 0, 5, 5, 5, 5 }, new int[] { 0, 5, 5, 5, 5 })]
         [TestCase(0, new int[] { 0 }, new int[] { })]
         public void RemoveByValue_WhenValidValuePassed_SholdRemoveFirstEntryElementByValue(int value, int[] actualArray, int[] expectedArray)
         {
@@ -396,13 +396,13 @@ namespace List.Tests
         [TestCase(false, new int[] { }, new int[] { 1 })]
         [TestCase(false, new int[] { 0 }, new int[] { })]
         [TestCase(true, new int[] { }, new int[] { })]
-        public void Equals_WhenValidEqualsPassed_ShouldEqualsreturnFalsAndTrue(bool expected, int[] actualArray, int[] expectedArray)
+        public void Equals_WhenValidEqualsPassed_ShouldEqualsreturnFalsAndTrue(bool expectedBool, int[] actualArray, int[] expectedArray)
         {
             Setup(actualArray, expectedArray, null);
 
-            bool actual = expected.Equals(actualArray);
+            bool actualBool = expected.Equals(actual);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedBool, actualBool);
         }
     }
 }

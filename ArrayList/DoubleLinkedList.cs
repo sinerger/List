@@ -3,7 +3,7 @@ using System.Text;
 
 namespace List
 {
-    class DoubleLinkedList<T> : IList<T> where T : IComparable<T>
+    public class DoubleLinkedList<T> : IList<T> where T : IComparable<T>
     {
         private int _length;
         private DoubleLinkedListNode<T> _root;
@@ -63,24 +63,27 @@ namespace List
 
         public DoubleLinkedList(T[] values)
         {
-            Length = values.Length;
-            if (values.Length != 0)
+            if (values != null)
             {
-                _root = new DoubleLinkedListNode<T>(values[0]);
-                _tail = _root;
-
-                for (int i = 1; i < values.Length; i++)
+                Length = values.Length;
+                if (values.Length != 0)
                 {
-                    DoubleLinkedListNode<T> tempNode = _tail;
-                    _tail.Next = new DoubleLinkedListNode<T>(values[i]);
-                    _tail = _tail.Next;
-                    _tail.Previous = tempNode;
+                    _root = new DoubleLinkedListNode<T>(values[0]);
+                    _tail = _root;
+
+                    for (int i = 1; i < values.Length; i++)
+                    {
+                        DoubleLinkedListNode<T> tempNode = _tail;
+                        _tail.Next = new DoubleLinkedListNode<T>(values[i]);
+                        _tail = _tail.Next;
+                        _tail.Previous = tempNode;
+                    }
                 }
-            }
-            else
-            {
-                _root = null;
-                _tail = _root;
+                else
+                {
+                    _root = null;
+                    _tail = _root;
+                }
             }
         }
 
@@ -357,7 +360,7 @@ namespace List
             {
                 if (index == 0)
                 {
-                    RemoveRangeFromStart(count);
+                    RemoveRangeFirst(count);
                 }
                 else if (count == Length - 1)
                 {
@@ -427,46 +430,45 @@ namespace List
         {
             if (value != null)
             {
-                if (Length == 1)
-                {
-                    _root = null;
-                    _tail = null;
-                    Length = 0;
-                }
-
-                DoubleLinkedListNode<T> current = _root;
                 int count = 0;
-
-                for (int i = 0; i < Length; i++)
+                if (Length == 1 && _root.Value.CompareTo(value) == 0)
                 {
-                    if (_root.Value.CompareTo(value) == 0)
-                    {
-                        _root = _root.Next;
-                    }
+                    RemoveFirst();
+                    ++count;
+                }
+                else if (Length > 1)
+                {
+                    DoubleLinkedListNode<T> current = _root.Next;
 
-                    if (current.Value.CompareTo(value) == 0)
+                    for (int i = 1; i < Length - 1; i++)
                     {
-                        if ((current.Previous is null))
-                        {
-                            current.Next.Previous = null;
-                        }
-                        else if (current.Next is null)
-                        {
-                            current.Previous.Next = null;
-                            _tail = current.Previous;
-                        }
-                        else
+                        if (current.Value.CompareTo(value) == 0)
                         {
                             current.Previous.Next = current.Next;
                             current.Next.Previous = current.Previous;
+                            ++count;
+                            --Length;
+                            --i;
                         }
 
-                        --i;
-                        --Length;
-                        ++count;
+                        current = current.Next;
                     }
 
-                    current = current.Next;
+                    if (_tail.Value.CompareTo(value) == 0)
+                    {
+                        _tail = _tail.Previous;
+                        _tail.Next = null;
+                        ++count;
+                        --Length;
+                    }
+
+                    if (_root.Value.CompareTo(value) == 0)
+                    {
+                        _root.Previous = null;
+                        _root = _root.Next;
+                        ++count;
+                        --Length;
+                    }
                 }
 
                 return count;
@@ -496,20 +498,32 @@ namespace List
         public void AddFirst(T value)
         {
             DoubleLinkedListNode<T> insertNode = new DoubleLinkedListNode<T>(value);
-
-            insertNode.Next = _root;
-            _root = insertNode;
-            _root.Next.Previous = insertNode;
-            ++Length;
+            if (Length == 0)
+            {
+                _root = insertNode;
+                _tail = _root;
+                ++Length;
+            }
+            else
+            {
+                insertNode.Next = _root;
+                _root = insertNode;
+                _root.Next.Previous = insertNode;
+                ++Length;
+            }
         }
 
         public void AddByIndex(int index, T value)
         {
-            if (index >= 0 && index < Length)
+            if (index >= 0 && index <= Length)
             {
                 if (index == 0)
                 {
                     AddFirst(value);
+                }
+                else if(index == Length)
+                {
+                    Add(value);
                 }
                 else
                 {
@@ -575,17 +589,21 @@ namespace List
             }
         }
 
-        public void AddRangeByIndex(IList<T> list, int index)
+        public void AddRangeByIndex(int index, IList<T> list)
         {
             if (list is DoubleLinkedList<T>)
             {
                 DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
 
-                if (index >= 0 && index < Length)
+                if (index >= 0 && index <= Length)
                 {
                     if (index == 0)
                     {
-                        AddRangeFirst(doubleList);
+                        AddRangeFirst(list);
+                    }
+                    else if (index == Length)
+                    {
+                        AddRange(list);
                     }
                     else
                     {

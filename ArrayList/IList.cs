@@ -19,7 +19,7 @@ namespace List
 
         void AddRangeFirst(IList<T> list);
 
-        void AddRangeByIndex(int index,IList<T> list);
+        void AddRangeByIndex(int index, IList<T> list);
 
         void Remove();
 
