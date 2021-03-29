@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace List
 {
-    public class DoubleLinkedList<T> where T : IComparable<T>
+    public class DoubleLinkedList<T> : IList<T> where T : IComparable<T>
     {
         private int _length;
         private DoubleLinkedListNode<T> _root;
@@ -136,7 +135,7 @@ namespace List
             }
         }
 
-        public int GetIndexMinValue()
+        public int GetMinIndex()
         {
             if (Length > 0)
             {
@@ -161,7 +160,7 @@ namespace List
             return -1;
         }
 
-        public int GetIndexMaxValue()
+        public int GetMaxIndex()
         {
             if (Length > 0)
             {
@@ -323,7 +322,7 @@ namespace List
             }
         }
 
-        public void RemoveRangeFromStart(int count)
+        public void RemoveRangeFirst(int count)
         {
             if (Length > 0 && count >= 0)
             {
@@ -504,7 +503,7 @@ namespace List
             ++Length;
         }
 
-        public void AddByIndex(T value, int index)
+        public void AddByIndex(int index, T value)
         {
             if (index >= 0 && index < Length)
             {
@@ -530,67 +529,82 @@ namespace List
             }
         }
 
-        public void AddList(DoubleLinkedList<T> list)
+        public void AddRange(IList<T> list)
         {
-            if (list.Length != 0)
+            if (list is DoubleLinkedList<T>)
             {
-                if (_tail is null)
+                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
+
+                if (doubleList.Length != 0)
                 {
-                    _root = list._root;
+                    if (_tail is null)
+                    {
+                        _root = doubleList._root;
+                    }
+                    else
+                    {
+                        doubleList._root.Previous = _tail;
+                        _tail.Next = doubleList._root;
+                        _tail = doubleList._tail;
+                    }
+
+                    Length += doubleList.Length;
+                }
+            }
+        }
+
+        public void AddRangeFirst(IList<T> list)
+        {
+            if (list is DoubleLinkedList<T>)
+            {
+                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
+
+                if (Length == 0)
+                {
+                    _root = doubleList._root;
+                    _tail = doubleList._tail;
+                    Length = doubleList.Length;
+                }
+                else if (doubleList.Length != 0)
+                {
+                    _root.Previous = doubleList._tail;
+                    doubleList._tail.Next = _root;
+                    _root = doubleList._root;
+                    Length += doubleList.Length;
+                }
+            }
+        }
+
+        public void AddRangeByIndex(IList<T> list, int index)
+        {
+            if (list is DoubleLinkedList<T>)
+            {
+                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
+
+                if (index >= 0 && index < Length)
+                {
+                    if (index == 0)
+                    {
+                        AddRangeFirst(doubleList);
+                    }
+                    else
+                    {
+                        DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
+                        doubleList._root.Previous = currentNode;
+                        currentNode.Next.Previous = doubleList._tail;
+                        doubleList._tail.Next = currentNode.Next;
+                        currentNode.Next = doubleList._root;
+                        Length += doubleList.Length;
+                    }
                 }
                 else
                 {
-                    list._root.Previous = _tail;
-                    _tail.Next = list._root;
-                    _tail = list._tail;
+                    throw new IndexOutOfRangeException();
                 }
-
-                Length += list.Length;
             }
         }
 
-        public void AddListFirst(DoubleLinkedList<T> list)
-        {
-            if (Length == 0)
-            {
-                _root = list._root;
-                _tail = list._tail;
-                Length = list.Length;
-            }
-            else if (list.Length != 0)
-            {
-                _root.Previous = list._tail;
-                list._tail.Next = _root;
-                _root = list._root;
-                Length += list.Length;
-            }
-        }
-
-        public void AddListByIndex(DoubleLinkedList<T> list, int index)
-        {
-            if (index >= 0 && index < Length)
-            {
-                if (index == 0)
-                {
-                    AddListFirst(list);
-                }
-                else
-                {
-                    DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
-                    list._root.Previous = currentNode;
-                    currentNode.Next.Previous = list._tail;
-                    list._tail.Next = currentNode.Next;
-                    currentNode.Next = list._root;
-                    Length += list.Length;
-                }
-            }
-            else
-            {
-                throw new IndexOutOfRangeException();
-            }
-        }
-
-        public DoubleLinkedList<T> Sort(bool isDescending)
+        public IList<T> Sort(bool isDescending)
         {
             DoubleLinkedList<T> list = new DoubleLinkedList<T>();
             list._root = this._root;
