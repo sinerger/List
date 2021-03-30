@@ -59,17 +59,27 @@ namespace List
             _array[0] = value;
         }
 
-        public ArrayList(T[] values)
+        private ArrayList(T[] values)
         {
-            if (values != null)
+            Length = values.Length;
+            _array = new T[(int)(values.Length * 2)];
+            for (int i = 0; i < Length; i++)
             {
-                Length = values.Length;
-                _array = new T[(int)(values.Length * 2)];
-                for (int i = 0; i < Length; i++)
-                {
-                    _array[i] = values[i];
-                }
+                _array[i] = values[i];
             }
+
+        }
+
+        public static ArrayList<T> Create(T[] array)
+        {
+            if (array != null)
+            {
+                ArrayList<T> list = new ArrayList<T>(array);
+
+                return list;
+            }
+
+            throw new ArgumentException("Array is null");
         }
 
         /// <summary>
@@ -434,45 +444,45 @@ namespace List
         /// <param index="index">Index by which the value will be inserted.</param>
         public void AddRangeByIndex(int index, IList<T> list)
         {
-            if (list is ArrayList<T>)
+            //if (list is ArrayList<T>)
+            //{
+            //    ArrayList<T> arrayList = (ArrayList<T>)list;
+            ArrayList<T> arrayList = Create(list.ToArray());
+            if (index >= 0 && index <= Length)
             {
-                ArrayList<T> arrayList = (ArrayList<T>)list;
-
-                if (index >= 0 && index <= Length)
+                Length += arrayList.Length;
+                if (Length >= _array.Length)
                 {
-                    Length += arrayList.Length;
-                    if (Length >= _array.Length)
-                    {
-                        UpSize();
-                    }
+                    UpSize();
+                }
 
-                    int n = arrayList.Length;
-                    for (int i = Length - 1; i >= index; i--)
+                int n = arrayList.Length;
+                for (int i = Length - 1; i >= index; i--)
+                {
+                    if (i + n < _array.Length)
                     {
-                        if (i + n < _array.Length)
-                        {
-                            _array[i + n] = _array[i];
-                        }
-                    }
-
-                    int count = 0;
-                    for (int i = index; i < Length; i++)
-                    {
-                        if (count < arrayList.Length)
-                        {
-                            _array[i] = arrayList[count++];
-                        }
+                        _array[i + n] = _array[i];
                     }
                 }
-                else
+
+                int count = 0;
+                for (int i = index; i < Length; i++)
                 {
-                    throw new IndexOutOfRangeException();
+                    if (count < arrayList.Length)
+                    {
+                        _array[i] = arrayList[count++];
+                    }
                 }
             }
             else
             {
-                throw new ArgumentException("Invalid type List");
+                throw new IndexOutOfRangeException();
             }
+            //}
+            //else
+            //{
+            //    throw new ArgumentException("Invalid type List");
+            //}
         }
 
         /// <summary>
@@ -579,5 +589,19 @@ namespace List
             }
         }
 
+        public T[] ToArray()
+        {
+            if (Length > 0)
+            {
+                T[] result = new T[Length];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = _array[i];
+                }
+                return result;
+            }
+
+            return new T[] { };
+        }
     }
 }

@@ -61,30 +61,39 @@ namespace List
             _tail = _root;
         }
 
-        public DoubleLinkedList(T[] values)
+        private DoubleLinkedList(T[] values)
         {
-            if (values != null)
+            Length = values.Length;
+            if (values.Length != 0)
             {
-                Length = values.Length;
-                if (values.Length != 0)
-                {
-                    _root = new DoubleLinkedListNode<T>(values[0]);
-                    _tail = _root;
+                _root = new DoubleLinkedListNode<T>(values[0]);
+                _tail = _root;
 
-                    for (int i = 1; i < values.Length; i++)
-                    {
-                        DoubleLinkedListNode<T> tempNode = _tail;
-                        _tail.Next = new DoubleLinkedListNode<T>(values[i]);
-                        _tail = _tail.Next;
-                        _tail.Previous = tempNode;
-                    }
-                }
-                else
+                for (int i = 1; i < values.Length; i++)
                 {
-                    _root = null;
-                    _tail = _root;
+                    DoubleLinkedListNode<T> tempNode = _tail;
+                    _tail.Next = new DoubleLinkedListNode<T>(values[i]);
+                    _tail = _tail.Next;
+                    _tail.Previous = tempNode;
                 }
             }
+            else
+            {
+                _root = null;
+                _tail = _root;
+            }
+        }
+
+        public static DoubleLinkedList<T> Create(T[] array)
+        {
+            if (array != null)
+            {
+                DoubleLinkedList<T> list = new DoubleLinkedList<T>(array);
+
+                return list;
+            }
+
+            throw new ArgumentException("Array is null");
         }
 
         public void Reverse()
@@ -521,7 +530,7 @@ namespace List
                 {
                     AddFirst(value);
                 }
-                else if(index == Length)
+                else if (index == Length)
                 {
                     Add(value);
                 }
@@ -545,26 +554,27 @@ namespace List
 
         public void AddRange(IList<T> list)
         {
-            if (list is DoubleLinkedList<T>)
+            //if (list is DoubleLinkedList<T>)
+            //{
+            //    DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
+            DoubleLinkedList<T> doubleList = new DoubleLinkedList<T>(list.ToArray());
+
+            if (doubleList.Length != 0)
             {
-                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
-
-                if (doubleList.Length != 0)
+                if (_tail is null)
                 {
-                    if (_tail is null)
-                    {
-                        _root = doubleList._root;
-                    }
-                    else
-                    {
-                        doubleList._root.Previous = _tail;
-                        _tail.Next = doubleList._root;
-                        _tail = doubleList._tail;
-                    }
-
-                    Length += doubleList.Length;
+                    _root = doubleList._root;
                 }
+                else
+                {
+                    doubleList._root.Previous = _tail;
+                    _tail.Next = doubleList._root;
+                    _tail = doubleList._tail;
+                }
+
+                Length += doubleList.Length;
             }
+            //}
         }
 
         public void AddRangeFirst(IList<T> list)
@@ -628,9 +638,31 @@ namespace List
             list._root = this._root;
             list._tail = this._tail;
             list.Length = this.Length;
-            int coef = isDescending ? -1 : 1;
+            int coef = isDescending ? 1 : -1;
 
             return MergeSort(list, coef);
+        }
+
+        public T[] ToArray()
+        {
+            if (Length > 0)
+            {
+                T[] result = new T[Length];
+                DoubleLinkedListNode<T> currentR = _root;
+                DoubleLinkedListNode<T> currentT = _tail;
+
+                for (int i = 0; i <= Length / 2; i++)
+                {
+                    result[i] = currentR.Value;
+                    result[Length - i - 1] = currentT.Value;
+                    currentR = currentR.Next;
+                    currentT = currentT.Previous;
+                }
+
+                return result;
+            }
+
+            return new T[] { };
         }
 
         public override bool Equals(object obj)
@@ -778,5 +810,7 @@ namespace List
 
             return currentNode;
         }
+
+
     }
 }

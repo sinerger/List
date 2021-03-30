@@ -176,9 +176,9 @@ namespace List
 
         public void AddRange(IList<T> list)
         {
-            if (list is LinkedList<T> && list != null)
+            if (list != null)
             {
-                LinkedList<T> linkedList = (LinkedList<T>)list;
+                LinkedList<T> linkedList = new LinkedList<T>(list.ToArray());
 
                 if (linkedList.Length != 0)
                 {
@@ -195,21 +195,17 @@ namespace List
                     Length += linkedList.Length;
                 }
             }
-            else if (list == null)
-            {
-                throw new ArgumentException("List is null");
-            }
             else
             {
-                throw new ArgumentException("Incorrect list");
+                throw new NullReferenceException("List is null");
             }
         }
 
         public void AddRangeFirst(IList<T> list)
         {
-            if (list is LinkedList<T> && list != null)
+            if (list != null)
             {
-                LinkedList<T> linkedList = (LinkedList<T>)list;
+                LinkedList<T> linkedList = new LinkedList<T>(list.ToArray());
 
                 if (linkedList.Length != 0)
                 {
@@ -218,21 +214,18 @@ namespace List
                     Length += linkedList.Length;
                 }
             }
-            else if (list == null)
-            {
-                throw new ArgumentException("List is null");
-            }
             else
             {
-                throw new ArgumentException("Incorrect list");
+                throw new NullReferenceException("List is null");
             }
+
         }
 
         public void AddRangeByIndex(int index, IList<T> list)
         {
-            if (list is LinkedList<T> && list != null)
+            if (list != null)
             {
-                LinkedList<T> linkedList = (LinkedList<T>)list;
+                LinkedList<T> linkedList = new LinkedList<T>(list.ToArray());
 
                 if (index >= 0 && index <= Length)
                 {
@@ -258,13 +251,9 @@ namespace List
                     throw new IndexOutOfRangeException();
                 }
             }
-            else if (list == null)
-            {
-                throw new ArgumentException("List is null");
-            }
             else
             {
-                throw new ArgumentException("Incorrect list");
+                throw new NullReferenceException("List is null");
             }
         }
 
@@ -444,6 +433,7 @@ namespace List
             }
         }
 
+        // _tail??
         public int RemoveAllByValue(T value)
         {
             if (value != null)
@@ -458,7 +448,7 @@ namespace List
                 {
                     Node<T> current = _root;
 
-                    while(!(current.Next is null))
+                    while (!(current.Next is null))
                     {
                         if (current.Next.Value.CompareTo(value) == 0)
                         {
@@ -646,7 +636,8 @@ namespace List
             LinkedList<T> list = new LinkedList<T>();
             list._root = this._root;
             list.Length = this.Length;
-            return MergeSort(list, isDescending);
+            int coef = isDescending ? 1 : -1;
+            return MergeSort(list, coef);
         }
 
         public override bool Equals(object obj)
@@ -689,6 +680,24 @@ namespace List
             throw new ArgumentNullException("Invalid object");
         }
 
+        public T[] ToArray()
+        {
+            if (Length > 0)
+            {
+                T[] result = new T[Length];
+                Node<T> current = _root;
+                for (int i = 0; i < Length; i++)
+                {
+                    result[i] = current.Value;
+                    current = current.Next;
+                }
+
+                return result;
+            }
+
+            return new T[] { };
+        }
+
         public override string ToString()
         {
             StringBuilder result = new StringBuilder(string.Empty);
@@ -708,7 +717,7 @@ namespace List
             return result.ToString().Trim();
         }
 
-        private LinkedList<T> MergeSort(LinkedList<T> list, bool isDescending)
+        private LinkedList<T> MergeSort(LinkedList<T> list, int coef)
         {
             if (list.Length <= 1)
             {
@@ -731,16 +740,14 @@ namespace List
                 }
             }
 
-            leftList = MergeSort(leftList, isDescending);
-            rightList = MergeSort(rightList, isDescending);
+            leftList = MergeSort(leftList, coef);
+            rightList = MergeSort(rightList, coef);
 
-            return Merge(leftList, rightList, isDescending);
+            return Merge(leftList, rightList, coef);
         }
 
-        private LinkedList<T> Merge(LinkedList<T> leftList, LinkedList<T> rightList, bool isDescending)
+        private LinkedList<T> Merge(LinkedList<T> leftList, LinkedList<T> rightList, int coef)
         {
-            var coef = isDescending ? -1 : 1;
-
             LinkedList<T> result = new LinkedList<T>();
 
             while (leftList.Length != 0 || rightList.Length != 0)
@@ -789,5 +796,6 @@ namespace List
 
             throw new IndexOutOfRangeException();
         }
+
     }
 }
