@@ -3,7 +3,7 @@ using System.Text;
 
 namespace List
 {
-    public class LinkedList<T> where T : IComparable<T>
+    class LinkedList<T> : IList<T> where T : IComparable<T>
     {
         private int _length;
         private Node<T> _root;
