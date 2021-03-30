@@ -3,8 +3,8 @@ using System;
 
 namespace List.Tests
 {
+    [TestFixture("LinkedList")]
     [TestFixture("ArrayList")]
-    //[TestFixture("LinkedList")]
     //[TestFixture("DoubleLinkedList")]
     public class Tests
     {
@@ -18,7 +18,7 @@ namespace List.Tests
             _parameter = param;
         }
 
-        public void Setup(int[] actualArray, int[] expectedArray, int[] list)
+        public void Setup(int[] actualArray, int[] expectedArray, int[] addedArray)
         {
             switch (_parameter)
             {
@@ -27,16 +27,19 @@ namespace List.Tests
                     expected = new ArrayList<int>(expectedArray);
                     addedList = new ArrayList<int>(list);
                     break;
-                //case "LinkedList":
-                //    actual = new LinkedList<int>(actualArray);
-                //    expected = new LinkedList<int>(expectedArray);
-                //    addedList = new LinkedList<int>(list);
-                //    break;
                 //case "DoubleLinkedList":
                 //    actual = new DoubleLinkedList<int>(actualArray);
                 //    expected = new DoubleLinkedList<int>(expectedArray);
                 //    addedList = new DoubleLinkedList<int>(list);
                 //    break;
+                case "LinkedList":
+                    if (actualArray != null)
+                        actual = LinkedList<int>.Create(actualArray);
+                    if (expectedArray != null)
+                        expected = LinkedList<int>.Create(expectedArray);
+                    if (addedArray != null)
+                        addedList = LinkedList<int>.Create(addedArray);
+                    break;
             }
         }
 
