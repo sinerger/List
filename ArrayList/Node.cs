@@ -13,5 +13,11 @@ namespace List
             Value = value;
             Next = null;
         }
+
+        public override string ToString()
+        {
+            string result = Value.ToString();
+            return result;
+        }
     }
 }

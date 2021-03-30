@@ -3,7 +3,7 @@ using System.Text;
 
 namespace List
 {
-    class LinkedList<T> : IList<T> where T : IComparable<T>
+    public class LinkedList<T> : IList<T> where T : IComparable<T>
     {
         private int _length;
         private Node<T> _root;
@@ -38,12 +38,21 @@ namespace List
             {
                 if (index >= 0 && index < Length)
                 {
-                    Node<T> currentNode = GetNodeByIndex(index);
+                    if (value != null)
+                    {
+                        Node<T> currentNode = GetNodeByIndex(index);
 
-                    currentNode.Value = value;
+                        currentNode.Value = value;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Value is null");
+                    }
                 }
-
-                throw new IndexOutOfRangeException();
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
             }
         }
 
@@ -61,7 +70,7 @@ namespace List
             _tail = _root;
         }
 
-        public LinkedList(T[] values)
+        private LinkedList(T[] values)
         {
             Length = values.Length;
             if (values.Length != 0)
@@ -81,157 +90,181 @@ namespace List
             }
         }
 
-        public void Reverse()
+        public static LinkedList<T> Create(T[] array)
         {
-            if (Length > 0)
+            if (array != null)
             {
-                Node<T> previous = null;
-                Node<T> current = _root;
-                Node<T> following = _root;
+                LinkedList<T> list = new LinkedList<T>(array);
 
-                while (!(current is null!))
-                {
-                    following = following.Next;
-                    current.Next = previous;
-                    previous = current;
-                    current = following;
-                }
-
-                current = _root;
-                _root = _tail;
-                _tail = current;
+                return list;
             }
+
+            throw new ArgumentException("Array is null");
         }
 
-        public int GetIndex(T value)
+        public void Add(T value)
         {
             if (value != null)
             {
-                if (Length > 0)
+                if (_tail is null)
                 {
-                    Node<T> current = _root;
-                    int index = 0;
-
-                    while (!(current is null))
-                    {
-                        if (current.Value.CompareTo(value) == 0)
-                        {
-                            return index;
-                        }
-
-                        ++index;
-                        current = current.Next;
-                    }
-
-                    return -1;
+                    _root = new Node<T>(value);
+                    _tail = _root;
+                    ++Length;
                 }
-
-                return -1;
+                else
+                {
+                    _tail.Next = new Node<T>(value);
+                    _tail = _tail.Next;
+                    _tail.Next = null;
+                    ++Length;
+                }
             }
             else
             {
-                throw new ArgumentException("Invalid value");
+                throw new ArgumentException("Value is null");
             }
         }
 
-        public int GetIndexMinValue()
+        public void AddFirst(T value)
         {
-            if (Length > 0)
+            if (value != null)
             {
-                Node<T> current = _root;
-                T minValue = current.Value;
-                int indexMinValue = 0;
+                Node<T> insertNode = new Node<T>(value);
 
-                for (int i = 0; i < Length; i++)
-                {
-                    if (current.Value.CompareTo(minValue) == -1)
-                    {
-                        minValue = current.Value;
-                        indexMinValue = i;
-                    }
-
-                    current = current.Next;
-                }
-
-                return indexMinValue;
-            }
-
-            return -1;
-        }
-
-        public int GetIndexMaxValue()
-        {
-            if (Length > 0)
-            {
-                Node<T> current = _root;
-                T maxValue = current.Value;
-                int indexMaxValue = 0;
-
-                for (int i = 0; i < Length; i++)
-                {
-                    if (current.Value.CompareTo(maxValue) == 1)
-                    {
-                        maxValue = current.Value;
-                        indexMaxValue = i;
-                    }
-
-                    current = current.Next;
-                }
-
-                return indexMaxValue;
-            }
-
-            return -1;
-        }
-
-        public T GetMin()
-        {
-            if (Length > 0)
-            {
-                Node<T> current = _root;
-                T MinValue = current.Value;
-
-                for (int i = 0; i < Length; i++)
-                {
-                    if (current.Value.CompareTo(MinValue) == -1)
-                    {
-                        MinValue = current.Value;
-                    }
-
-                    current = current.Next;
-                }
-
-                return MinValue;
+                insertNode.Next = _root;
+                _root = insertNode;
+                ++Length;
             }
             else
             {
-                throw new ArgumentException("Array no contain elements");
+                throw new ArgumentException("Value is null");
             }
-
         }
 
-        public T GetMax()
+        public void AddByIndex(int index, T value)
         {
-            if (Length > 0)
+            if (index >= 0 && index <= Length && value != null)
             {
-                Node<T> current = _root;
-                T maxValue = current.Value;
-
-                for (int i = 0; i < Length; i++)
+                if (index == 0)
                 {
-                    if (current.Value.CompareTo(maxValue) == 1)
-                    {
-                        maxValue = current.Value;
-                    }
-
-                    current = current.Next;
+                    AddFirst(value);
                 }
+                else if (index == Length)
+                {
+                    Add(value);
+                }
+                else
+                {
+                    Node<T> insertNode = new Node<T>(value);
+                    Node<T> currentNode = GetNodeByIndex(index - 1);
 
-                return maxValue;
+                    insertNode.Next = currentNode.Next;
+                    currentNode.Next = insertNode;
+                    ++Length;
+                }
+            }
+            else if (value == null)
+            {
+                throw new ArgumentException("Value is null");
             }
             else
             {
-                throw new ArgumentException("Array no contain elements");
+                throw new IndexOutOfRangeException();
+            }
+        }
+
+        public void AddRange(IList<T> list)
+        {
+            if (list is LinkedList<T> && list != null)
+            {
+                LinkedList<T> linkedList = (LinkedList<T>)list;
+
+                if (linkedList.Length != 0)
+                {
+                    if (_tail is null)
+                    {
+                        _root = linkedList._root;
+                    }
+                    else
+                    {
+                        _tail.Next = linkedList._root;
+                        _tail = linkedList._tail;
+                    }
+
+                    Length += linkedList.Length;
+                }
+            }
+            else if (list == null)
+            {
+                throw new ArgumentException("List is null");
+            }
+            else
+            {
+                throw new ArgumentException("Incorrect list");
+            }
+        }
+
+        public void AddRangeFirst(IList<T> list)
+        {
+            if (list is LinkedList<T> && list != null)
+            {
+                LinkedList<T> linkedList = (LinkedList<T>)list;
+
+                if (linkedList.Length != 0)
+                {
+                    linkedList._tail.Next = _root;
+                    _root = linkedList._root;
+                    Length += linkedList.Length;
+                }
+            }
+            else if (list == null)
+            {
+                throw new ArgumentException("List is null");
+            }
+            else
+            {
+                throw new ArgumentException("Incorrect list");
+            }
+        }
+
+        public void AddRangeByIndex(int index, IList<T> list)
+        {
+            if (list is LinkedList<T> && list != null)
+            {
+                LinkedList<T> linkedList = (LinkedList<T>)list;
+
+                if (index >= 0 && index <= Length)
+                {
+                    if (index == 0)
+                    {
+                        AddRangeFirst(list);
+                    }
+                    else if (index == Length)
+                    {
+                        AddRange(list);
+                    }
+                    else
+                    {
+                        Node<T> currentNode = GetNodeByIndex(index - 1);
+
+                        linkedList._tail.Next = currentNode.Next;
+                        currentNode.Next = linkedList._root;
+                        Length += linkedList.Length;
+                    }
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
+            }
+            else if (list == null)
+            {
+                throw new ArgumentException("List is null");
+            }
+            else
+            {
+                throw new ArgumentException("Incorrect list");
             }
         }
 
@@ -312,7 +345,7 @@ namespace List
             }
         }
 
-        public void RemoveRangeFromStart(int count)
+        public void RemoveRangeFirst(int count)
         {
             if (Length > 0 && count >= 0)
             {
@@ -346,7 +379,7 @@ namespace List
             {
                 if (index == 0)
                 {
-                    RemoveRangeFromStart(count);
+                    RemoveRangeFirst(count);
                 }
                 else if (count == Length - 1)
                 {
@@ -407,7 +440,7 @@ namespace List
             }
             else
             {
-                throw new ArgumentException("Invalid count");
+                throw new ArgumentException("Value is null");
             }
         }
 
@@ -415,149 +448,200 @@ namespace List
         {
             if (value != null)
             {
-                Node<T> current = _root;
-                Node<T> previuos = _root;
                 int count = 0;
-
-                for (int i = 0; i < Length; i++)
+                if (Length == 1 && _root.Value.CompareTo(value) == 0)
                 {
+                    RemoveFirst();
+                    ++count;
+                }
+                else if (Length > 1)
+                {
+                    Node<T> current = _root;
+
+                    while(!(current.Next is null))
+                    {
+                        if (current.Next.Value.CompareTo(value) == 0)
+                        {
+                            current.Next = current.Next.Next;
+                            ++count;
+                            --Length;
+                        }
+                        else
+                        {
+                            current = current.Next;
+                        }
+                    }
+
                     if (_root.Value.CompareTo(value) == 0)
                     {
                         _root = _root.Next;
-                    }
-
-                    if (current.Value.CompareTo(value) == 0)
-                    {
-                        previuos.Next = current.Next;
-                        --i;
-                        --Length;
                         ++count;
+                        --Length;
                     }
-
-                    previuos = current;
-                    current = current.Next;
                 }
-
-                _tail = GetNodeByIndex(Length - 1);
-
                 return count;
             }
             else
             {
-                throw new ArgumentException("Invalid count");
+                throw new ArgumentException("Value is null");
             }
         }
 
-        public void Add(T value)
+        public void Reverse()
         {
-            if (_tail is null)
+            if (Length > 0)
             {
-                _root = new Node<T>(value);
-                _tail = _root;
-                ++Length;
+                Node<T> previous = null;
+                Node<T> current = _root;
+                Node<T> following = _root;
+
+                while (!(current is null!))
+                {
+                    following = following.Next;
+                    current.Next = previous;
+                    previous = current;
+                    current = following;
+                }
+
+                current = _root;
+                _root = _tail;
+                _tail = current;
+            }
+        }
+
+        public int GetIndex(T value)
+        {
+            if (value != null)
+            {
+                if (Length > 0)
+                {
+                    Node<T> current = _root;
+                    int index = 0;
+
+                    while (!(current is null))
+                    {
+                        if (current.Value.CompareTo(value) == 0)
+                        {
+                            return index;
+                        }
+
+                        ++index;
+                        current = current.Next;
+                    }
+
+                    return -1;
+                }
+
+                return -1;
             }
             else
             {
-                _tail.Next = new Node<T>(value);
-                _tail = _tail.Next;
-                _tail.Next = null;
-                ++Length;
+                throw new ArgumentException("Value is null");
             }
         }
 
-        public void AddFirst(T value)
+        public int GetMinIndex()
         {
-            Node<T> insertNode = new Node<T>(value);
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T minValue = current.Value;
+                int indexMinValue = 0;
 
-            insertNode.Next = _root;
-            _root = insertNode;
-            ++Length;
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(minValue) == -1)
+                    {
+                        minValue = current.Value;
+                        indexMinValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMinValue;
+            }
+
+            return -1;
         }
 
-        public void AddByIndex(T value, int index)
+        public int GetMaxIndex()
         {
-            if (index >= 0 && index <= Length)
+            if (Length > 0)
             {
-                if (index == 0)
-                {
-                    AddFirst(value);
-                }
-                else if (index == Length - 1)
-                {
-                    Add(value);
-                }
-                else
-                {
-                    Node<T> insertNode = new Node<T>(value);
-                    Node<T> currentNode = GetNodeByIndex(index - 1);
+                Node<T> current = _root;
+                T maxValue = current.Value;
+                int indexMaxValue = 0;
 
-                    insertNode.Next = currentNode.Next;
-                    currentNode.Next = insertNode;
-                    ++Length;
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                        indexMaxValue = i;
+                    }
+
+                    current = current.Next;
                 }
+
+                return indexMaxValue;
+            }
+
+            return -1;
+        }
+
+        public T GetMin()
+        {
+            if (Length > 0)
+            {
+                Node<T> current = _root;
+                T MinValue = current.Value;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(MinValue) == -1)
+                    {
+                        MinValue = current.Value;
+                    }
+
+                    current = current.Next;
+                }
+
+                return MinValue;
             }
             else
             {
-                throw new IndexOutOfRangeException();
+                throw new ArgumentException("Array no contain elements");
             }
+
         }
 
-        public void AddList(LinkedList<T> list)
+        public T GetMax()
         {
-            if (list.Length != 0)
+            if (Length > 0)
             {
-                if (_tail is null)
+                Node<T> current = _root;
+                T maxValue = current.Value;
+
+                for (int i = 0; i < Length; i++)
                 {
-                    _root = list._root;
-                }
-                else
-                {
-                    _tail.Next = list._root;
-                    _tail = list._tail;
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                    }
+
+                    current = current.Next;
                 }
 
-                Length += list.Length;
-            }
-        }
-
-        public void AddListFirst(LinkedList<T> list)
-        {
-            if (list.Length != 0)
-            {
-                list._tail.Next = _root;
-                _root = list._root;
-                Length += list.Length;
-            }
-        }
-
-        public void AddListByIndex(LinkedList<T> list, int index)
-        {
-            if (index >= 0 && index < Length)
-            {
-                if (index == 0)
-                {
-                    AddListFirst(list);
-                }
-                else if (index == Length - 1)
-                {
-                    AddList(list);
-                }
-                else
-                {
-                    Node<T> currentNode = GetNodeByIndex(index - 1);
-
-                    list._tail.Next = currentNode.Next;
-                    currentNode.Next = list._root;
-                    Length += list.Length;
-                }
+                return maxValue;
             }
             else
             {
-                throw new IndexOutOfRangeException();
+                throw new ArgumentException("Array no contain elements");
             }
         }
 
-        public LinkedList<T> Sort(bool isDescending)
+        public IList<T> Sort(bool isDescending)
         {
             LinkedList<T> list = new LinkedList<T>();
             list._root = this._root;
@@ -602,7 +686,7 @@ namespace List
                 return false;
             }
 
-            throw new ArgumentNullException();
+            throw new ArgumentNullException("Invalid object");
         }
 
         public override string ToString()
@@ -691,14 +775,19 @@ namespace List
 
         private Node<T> GetNodeByIndex(int index)
         {
-            Node<T> currentNode = _root;
-
-            for (int i = 0; i < index; i++)
+            if (index >= 0 && index <= Length)
             {
-                currentNode = currentNode.Next;
+                Node<T> currentNode = _root;
+
+                for (int i = 0; i < index; i++)
+                {
+                    currentNode = currentNode.Next;
+                }
+
+                return currentNode;
             }
 
-            return currentNode;
+            throw new IndexOutOfRangeException();
         }
     }
 }

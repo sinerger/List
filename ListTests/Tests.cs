@@ -3,9 +3,9 @@ using System;
 
 namespace List.Tests
 {
-    [TestFixture("ArrayList")]
+    //[TestFixture("ArrayList")]
     [TestFixture("LinkedList")]
-    [TestFixture("DoubleLinkedList")]
+    //[TestFixture("DoubleLinkedList")]
     public class Tests
     {
         private IList<int> actual;
@@ -18,25 +18,28 @@ namespace List.Tests
             _parameter = param;
         }
 
-        public void Setup(int[] actualArray, int[] expectedArray, int[] list)
+        public void Setup(int[] actualArray, int[] expectedArray, int[] addedArray)
         {
             switch (_parameter)
             {
-                case "ArrayList":
-                    actual = new ArrayList<int>(actualArray);
-                    expected = new ArrayList<int>(expectedArray);
-                    addedList = new ArrayList<int>(list);
-                    break;
+                //    case "ArrayList":
+                //        actual = new ArrayList<int>(actualArray);
+                //        expected = new ArrayList<int>(expectedArray);
+                //        addedList = new ArrayList<int>(list);
+                //        break;
                 case "LinkedList":
-                    actual = new LinkedList<int>(actualArray);
-                    expected = new LinkedList<int>(expectedArray);
-                    addedList = new LinkedList<int>(list);
+                    if (actualArray != null)
+                        actual = LinkedList<int>.Create(actualArray);
+                    if (expectedArray != null)
+                        expected = LinkedList<int>.Create(expectedArray);
+                    if (addedArray != null)
+                        addedList = LinkedList<int>.Create(addedArray);
                     break;
-                case "DoubleLinkedList":
-                    actual = new DoubleLinkedList<int>(actualArray);
-                    expected = new DoubleLinkedList<int>(expectedArray);
-                    addedList = new DoubleLinkedList<int>(list);
-                    break;
+                    //    case "DoubleLinkedList":
+                    //        actual = new DoubleLinkedList<int>(actualArray);
+                    //        expected = new DoubleLinkedList<int>(expectedArray);
+                    //        addedList = new DoubleLinkedList<int>(list);
+                    //        break;
             }
         }
 
@@ -84,7 +87,7 @@ namespace List.Tests
         {
             Setup(actualArray, expectedArray, null);
 
-            actual.AddByIndex(value, index);
+            actual.AddByIndex(index, value);
 
             Assert.AreEqual(expected, actual);
         }
@@ -396,13 +399,13 @@ namespace List.Tests
         [TestCase(false, new int[] { }, new int[] { 1 })]
         [TestCase(false, new int[] { 0 }, new int[] { })]
         [TestCase(true, new int[] { }, new int[] { })]
-        public void Equals_WhenValidEqualsPassed_ShouldEqualsreturnFalsAndTrue(bool expected, int[] actualArray, int[] expectedArray)
+        public void Equals_WhenValidEqualsPassed_ShouldEqualsreturnFalsAndTrue(bool expectedBool, int[] actualArray, int[] expectedArray)
         {
             Setup(actualArray, expectedArray, null);
 
-            bool actual = expected.Equals(actualArray);
+            bool actualBool = expected.Equals(actual);
 
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedBool, actualBool);
         }
     }
 }
