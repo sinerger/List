@@ -54,7 +54,7 @@ namespace List
             _tail = _root;
         }
 
-        public DoubleLinkedList(T value)
+        private DoubleLinkedList(T value)
         {
             Length = 1;
             _root = new DoubleLinkedListNode<T>(value);
@@ -84,6 +84,18 @@ namespace List
             }
         }
 
+        public static DoubleLinkedList<T> Create(T value)
+        {
+            if (value != null)
+            {
+                DoubleLinkedList<T> list = new DoubleLinkedList<T>(value);
+
+                return list;
+            }
+
+            throw new ArgumentException("Array is null");
+        }
+
         public static DoubleLinkedList<T> Create(T[] array)
         {
             if (array != null)
@@ -96,155 +108,180 @@ namespace List
             throw new ArgumentException("Array is null");
         }
 
-        public void Reverse()
-        {
-            if (Length > 0)
-            {
-                DoubleLinkedListNode<T> current = _root;
-
-                while (!(current is null!))
-                {
-                    var tempNode = current.Next;
-                    current.Next = current.Previous;
-                    current.Previous = tempNode;
-                    current = current.Previous;
-                }
-
-                current = _root;
-                _root = _tail;
-                _tail = current;
-            }
-        }
-
-        public int GetIndex(T value)
+        public void Add(T value)
         {
             if (value != null)
             {
-                if (Length > 0)
+                if (_tail is null)
                 {
-                    DoubleLinkedListNode<T> current = _root;
-                    int index = 0;
-
-                    while (!(current is null))
-                    {
-                        if (current.Value.CompareTo(value) == 0)
-                        {
-                            return index;
-                        }
-
-                        ++index;
-                        current = current.Next;
-                    }
-
-                    return -1;
+                    _root = new DoubleLinkedListNode<T>(value); ;
+                    _tail = _root;
                 }
-
-                return -1;
+                else
+                {
+                    _tail.Next = new DoubleLinkedListNode<T>(value);
+                    _tail.Next.Previous = _tail;
+                    _tail = _tail.Next;
+                }
+                ++Length;
             }
             else
             {
-                throw new ArgumentException("Invalid value");
+                throw new ArgumentException("Value is null");
             }
         }
 
-        public int GetMinIndex()
+        public void AddFirst(T value)
         {
-            if (Length > 0)
+            if (value != null)
             {
-                DoubleLinkedListNode<T> current = _root;
-                T minValue = current.Value;
-                int indexMinValue = 0;
-
-                for (int i = 0; i < Length; i++)
+                DoubleLinkedListNode<T> insertNode = new DoubleLinkedListNode<T>(value);
+                if (Length == 0)
                 {
-                    if (current.Value.CompareTo(minValue) == -1)
-                    {
-                        minValue = current.Value;
-                        indexMinValue = i;
-                    }
-
-                    current = current.Next;
+                    _root = insertNode;
+                    _tail = _root;
+                    ++Length;
                 }
-
-                return indexMinValue;
-            }
-
-            return -1;
-        }
-
-        public int GetMaxIndex()
-        {
-            if (Length > 0)
-            {
-                DoubleLinkedListNode<T> current = _root;
-                T maxValue = current.Value;
-                int indexMaxValue = 0;
-
-                for (int i = 0; i < Length; i++)
+                else
                 {
-                    if (current.Value.CompareTo(maxValue) == 1)
-                    {
-                        maxValue = current.Value;
-                        indexMaxValue = i;
-                    }
-
-                    current = current.Next;
+                    insertNode.Next = _root;
+                    _root = insertNode;
+                    _root.Next.Previous = insertNode;
+                    ++Length;
                 }
-
-                return indexMaxValue;
-            }
-
-            return -1;
-        }
-
-        public T GetMin()
-        {
-            if (Length > 0)
-            {
-                DoubleLinkedListNode<T> current = _root;
-                T MinValue = current.Value;
-
-                for (int i = 0; i < Length; i++)
-                {
-                    if (current.Value.CompareTo(MinValue) == -1)
-                    {
-                        MinValue = current.Value;
-                    }
-
-                    current = current.Next;
-                }
-
-                return MinValue;
             }
             else
             {
-                throw new ArgumentException("Array no contain elements");
+                throw new ArgumentException("Value is null");
+            }
+        }
+
+        public void AddByIndex(int index, T value)
+        {
+            if (value != null)
+            {
+                if (index >= 0 && index <= Length)
+                {
+                    if (index == 0)
+                    {
+                        AddFirst(value);
+                    }
+                    else if (index == Length)
+                    {
+                        Add(value);
+                    }
+                    else
+                    {
+                        DoubleLinkedListNode<T> insertNode = new DoubleLinkedListNode<T>(value);
+                        DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
+
+                        insertNode.Next = currentNode.Next;
+                        currentNode.Next = insertNode;
+                        insertNode.Previous = currentNode;
+                        insertNode.Next.Previous = insertNode;
+                        ++Length;
+                    }
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Value is null");
+            }
+        }
+
+        public void AddRange(IList<T> list)
+        {
+            if (list != null)
+            {
+                DoubleLinkedList<T> doubleList = new DoubleLinkedList<T>(list.ToArray());
+
+                if (doubleList.Length != 0)
+                {
+                    if (_tail is null)
+                    {
+                        _root = doubleList._root;
+                    }
+                    else
+                    {
+                        doubleList._root.Previous = _tail;
+                        _tail.Next = doubleList._root;
+                        _tail = doubleList._tail;
+                    }
+
+                    Length += doubleList.Length;
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("List is null");
             }
 
         }
 
-        public T GetMax()
+        public void AddRangeFirst(IList<T> list)
         {
-            if (Length > 0)
+            if (list != null)
             {
-                DoubleLinkedListNode<T> current = _root;
-                T maxValue = current.Value;
+                DoubleLinkedList<T> doubleList = DoubleLinkedList<T>.Create(list.ToArray());
 
-                for (int i = 0; i < Length; i++)
+                if (Length == 0)
                 {
-                    if (current.Value.CompareTo(maxValue) == 1)
-                    {
-                        maxValue = current.Value;
-                    }
-
-                    current = current.Next;
+                    _root = doubleList._root;
+                    _tail = doubleList._tail;
+                    Length = doubleList.Length;
                 }
-
-                return maxValue;
+                else if (doubleList.Length != 0)
+                {
+                    _root.Previous = doubleList._tail;
+                    doubleList._tail.Next = _root;
+                    _root = doubleList._root;
+                    Length += doubleList.Length;
+                }
             }
             else
             {
-                throw new ArgumentException("Array no contain elements");
+                throw new NullReferenceException("List is null");
+            }
+        }
+
+        public void AddRangeByIndex(int index, IList<T> list)
+        {
+            if (list != null)
+            {
+                DoubleLinkedList<T> doubleList = DoubleLinkedList<T>.Create(list.ToArray());
+
+                if (index >= 0 && index <= Length)
+                {
+                    if (index == 0)
+                    {
+                        AddRangeFirst(list);
+                    }
+                    else if (index == Length)
+                    {
+                        AddRange(list);
+                    }
+                    else
+                    {
+                        DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
+                        doubleList._root.Previous = currentNode;
+                        currentNode.Next.Previous = doubleList._tail;
+                        doubleList._tail.Next = currentNode.Next;
+                        currentNode.Next = doubleList._root;
+                        Length += doubleList.Length;
+                    }
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException();
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("List is null");
             }
         }
 
@@ -488,147 +525,155 @@ namespace List
             }
         }
 
-        public void Add(T value)
+        public void Reverse()
         {
-            if (_tail is null)
+            if (Length > 0)
             {
-                _root = new DoubleLinkedListNode<T>(value); ;
-                _tail = _root;
+                DoubleLinkedListNode<T> current = _root;
+
+                while (!(current is null!))
+                {
+                    var tempNode = current.Next;
+                    current.Next = current.Previous;
+                    current.Previous = tempNode;
+                    current = current.Previous;
+                }
+
+                current = _root;
+                _root = _tail;
+                _tail = current;
+            }
+        }
+
+        public int GetIndex(T value)
+        {
+            if (value != null)
+            {
+                if (Length > 0)
+                {
+                    DoubleLinkedListNode<T> current = _root;
+                    int index = 0;
+
+                    while (!(current is null))
+                    {
+                        if (current.Value.CompareTo(value) == 0)
+                        {
+                            return index;
+                        }
+
+                        ++index;
+                        current = current.Next;
+                    }
+
+                    return -1;
+                }
+
+                return -1;
             }
             else
             {
-                _tail.Next = new DoubleLinkedListNode<T>(value);
-                _tail.Next.Previous = _tail;
-                _tail = _tail.Next;
+                throw new ArgumentException("Invalid value");
             }
-            ++Length;
         }
 
-        public void AddFirst(T value)
+        public int GetMinIndex()
         {
-            DoubleLinkedListNode<T> insertNode = new DoubleLinkedListNode<T>(value);
-            if (Length == 0)
+            if (Length > 0)
             {
-                _root = insertNode;
-                _tail = _root;
-                ++Length;
+                DoubleLinkedListNode<T> current = _root;
+                T minValue = current.Value;
+                int indexMinValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(minValue) == -1)
+                    {
+                        minValue = current.Value;
+                        indexMinValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMinValue;
+            }
+
+            return -1;
+        }
+
+        public int GetMaxIndex()
+        {
+            if (Length > 0)
+            {
+                DoubleLinkedListNode<T> current = _root;
+                T maxValue = current.Value;
+                int indexMaxValue = 0;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                        indexMaxValue = i;
+                    }
+
+                    current = current.Next;
+                }
+
+                return indexMaxValue;
+            }
+
+            return -1;
+        }
+
+        public T GetMin()
+        {
+            if (Length > 0)
+            {
+                DoubleLinkedListNode<T> current = _root;
+                T MinValue = current.Value;
+
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(MinValue) == -1)
+                    {
+                        MinValue = current.Value;
+                    }
+
+                    current = current.Next;
+                }
+
+                return MinValue;
             }
             else
             {
-                insertNode.Next = _root;
-                _root = insertNode;
-                _root.Next.Previous = insertNode;
-                ++Length;
+                throw new ArgumentException("Array no contain elements");
             }
+
         }
 
-        public void AddByIndex(int index, T value)
+        public T GetMax()
         {
-            if (index >= 0 && index <= Length)
+            if (Length > 0)
             {
-                if (index == 0)
-                {
-                    AddFirst(value);
-                }
-                else if (index == Length)
-                {
-                    Add(value);
-                }
-                else
-                {
-                    DoubleLinkedListNode<T> insertNode = new DoubleLinkedListNode<T>(value);
-                    DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
+                DoubleLinkedListNode<T> current = _root;
+                T maxValue = current.Value;
 
-                    insertNode.Next = currentNode.Next;
-                    currentNode.Next = insertNode;
-                    insertNode.Previous = currentNode;
-                    insertNode.Next.Previous = insertNode;
-                    ++Length;
+                for (int i = 0; i < Length; i++)
+                {
+                    if (current.Value.CompareTo(maxValue) == 1)
+                    {
+                        maxValue = current.Value;
+                    }
+
+                    current = current.Next;
                 }
+
+                return maxValue;
             }
             else
             {
-                throw new IndexOutOfRangeException();
-            }
-        }
-
-        public void AddRange(IList<T> list)
-        {
-            //if (list is DoubleLinkedList<T>)
-            //{
-            //    DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
-            DoubleLinkedList<T> doubleList = new DoubleLinkedList<T>(list.ToArray());
-
-            if (doubleList.Length != 0)
-            {
-                if (_tail is null)
-                {
-                    _root = doubleList._root;
-                }
-                else
-                {
-                    doubleList._root.Previous = _tail;
-                    _tail.Next = doubleList._root;
-                    _tail = doubleList._tail;
-                }
-
-                Length += doubleList.Length;
-            }
-            //}
-        }
-
-        public void AddRangeFirst(IList<T> list)
-        {
-            if (list is DoubleLinkedList<T>)
-            {
-                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
-
-                if (Length == 0)
-                {
-                    _root = doubleList._root;
-                    _tail = doubleList._tail;
-                    Length = doubleList.Length;
-                }
-                else if (doubleList.Length != 0)
-                {
-                    _root.Previous = doubleList._tail;
-                    doubleList._tail.Next = _root;
-                    _root = doubleList._root;
-                    Length += doubleList.Length;
-                }
-            }
-        }
-
-        public void AddRangeByIndex(int index, IList<T> list)
-        {
-            if (list is DoubleLinkedList<T>)
-            {
-                DoubleLinkedList<T> doubleList = (DoubleLinkedList<T>)list;
-
-                if (index >= 0 && index <= Length)
-                {
-                    if (index == 0)
-                    {
-                        AddRangeFirst(list);
-                    }
-                    else if (index == Length)
-                    {
-                        AddRange(list);
-                    }
-                    else
-                    {
-                        DoubleLinkedListNode<T> currentNode = GetNodeByIndex(index - 1);
-                        doubleList._root.Previous = currentNode;
-                        currentNode.Next.Previous = doubleList._tail;
-                        doubleList._tail.Next = currentNode.Next;
-                        currentNode.Next = doubleList._root;
-                        Length += doubleList.Length;
-                    }
-                }
-                else
-                {
-                    throw new IndexOutOfRangeException();
-                }
+                throw new ArgumentException("Array no contain elements");
             }
         }
 
@@ -810,7 +855,5 @@ namespace List
 
             return currentNode;
         }
-
-
     }
 }

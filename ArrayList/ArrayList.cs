@@ -129,6 +129,10 @@ namespace List
                     throw new IndexOutOfRangeException();
                 }
             }
+            else
+            {
+                throw new ArgumentException("Value is null");
+            }
         }
 
         /// <summary>
@@ -197,6 +201,10 @@ namespace List
 
                 DownSize();
             }
+            else if (count == 0)
+            {
+                return;
+            }
             else
             {
                 int targetIndex = Length - count;
@@ -211,7 +219,8 @@ namespace List
         /// <param count="count">Count of items to be removed.</param>
         public void RemoveRangeFirst(int count)
         {
-            RemoveRangeByIndex(index: 0, count);
+                RemoveRangeByIndex(index: 0, count);
+            
         }
 
         /// <summary>
@@ -223,7 +232,11 @@ namespace List
         {
             if (index >= 0 && index <= Length && count >= 0)
             {
-                if (count + index > Length)
+                if (index == Length)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                else if (count + index > Length)
                 {
                     Length = index;
                 }
@@ -390,8 +403,10 @@ namespace List
 
                 return indexMinValue;
             }
-
-            return -1;
+            else
+            {
+                throw new ArgumentException("Array no contain elements");
+            }
         }
 
         /// <summary>
@@ -415,8 +430,10 @@ namespace List
 
                 return indexMaxValue;
             }
-
-            return -1;
+            else
+            {
+                throw new ArgumentException("Array no contain elements");
+            }
         }
 
         /// <summary>
@@ -549,6 +566,10 @@ namespace List
                 }
 
                 return result;
+            }
+            else if(obj is null)
+            {
+                throw new ArgumentNullException("Object is null");
             }
 
             return false;

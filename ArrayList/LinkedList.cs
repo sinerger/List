@@ -63,7 +63,7 @@ namespace List
             _tail = _root;
         }
 
-        public LinkedList(T value)
+        private LinkedList(T value)
         {
             Length = 1;
             _root = new Node<T>(value);
@@ -88,6 +88,18 @@ namespace List
                 _root = null;
                 _tail = _root;
             }
+        }
+
+        public static LinkedList<T> Create(T value)
+        {
+            if (value != null)
+            {
+                LinkedList<T> list = new LinkedList<T>(value);
+
+                return list;
+            }
+
+            throw new ArgumentException("Array is null");
         }
 
         public static LinkedList<T> Create(T[] array)
@@ -433,7 +445,6 @@ namespace List
             }
         }
 
-        // _tail??
         public int RemoveAllByValue(T value)
         {
             if (value != null)
@@ -448,18 +459,26 @@ namespace List
                 {
                     Node<T> current = _root;
 
-                    while (!(current.Next is null))
+                    for (int i = 1; i < Length-1; i++)
                     {
                         if (current.Next.Value.CompareTo(value) == 0)
                         {
                             current.Next = current.Next.Next;
-                            ++count;
                             --Length;
+                            ++count;
+                            --i;
                         }
                         else
                         {
                             current = current.Next;
                         }
+                    }
+
+                    if (_tail.Value.CompareTo(value) == 0)
+                    {
+                        _tail = GetNodeByIndex(Length - 2);
+                        ++count;
+                        --Length;
                     }
 
                     if (_root.Value.CompareTo(value) == 0)
@@ -796,6 +815,5 @@ namespace List
 
             throw new IndexOutOfRangeException();
         }
-
     }
 }

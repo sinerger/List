@@ -4,7 +4,7 @@ using System.Text;
 
 namespace List.Tests
 {
-    class DoubleLinkedListTests : AbstractBaseTestsWhenValueTypeInt
+    class DoubleLinkedListTestsWhenValueTypeIntPositiveTests : AbstractBaseTestsWhenValueTypeIntPositiveTests
     {
         public override void CreateLists(int[] actualArray, int[] expectedArray, int[] addedArray)
         {

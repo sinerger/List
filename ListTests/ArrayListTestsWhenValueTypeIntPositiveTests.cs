@@ -1,6 +1,6 @@
 ﻿namespace List.Tests
 {
-    class ArrayListTests : AbstractBaseTestsWhenValueTypeInt
+    class ArrayListTestsWhenValueTypeIntPositiveTests : AbstractBaseTestsWhenValueTypeIntPositiveTests
     {
         public override void CreateLists(int[] actualArray, int[] expectedArray, int[] addedArray)
         {

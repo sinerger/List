@@ -11,7 +11,22 @@ namespace List.Tests
         protected IList<string> addedList;
 
         public abstract void CreateList(string[] actualArray);
+
         public abstract void CreateList(string[] actualArray, string[] addedArray);
+
+        [TestCase(null)]
+        public void CreateArray_WhenIvalinPassed_SholdReturnArgumentException(string value)
+        {
+            Assert.Throws<ArgumentException>(() => LinkedList<string>.Create(value));
+        }
+
+        [TestCase(null)]
+        public void CreateArray_WhenIvalinPassed_SholdReturnArgumentException(string[] array)
+        {
+            Assert.Throws<ArgumentException>(() => LinkedList<string>.Create(array));
+        }
+
+        
 
         [TestCase(null, new string[] { "0", "1", "2", "3", "4", "5" })]
         [TestCase(null, new string[] { "0" })]
@@ -87,7 +102,7 @@ namespace List.Tests
             Assert.Throws<NullReferenceException>(() => actual.AddRangeByIndex(index, value));
         }
 
-        
+
         [TestCase(7, new string[] { "0", "1", "2", "3", "4", "5" }, new string[] { "0", "1", "2", "3", "4", "5" })]
         [TestCase(8, new string[] { "0", "1", "2", "3", "4", "5" }, new string[] { "0", "1", "2", "3", "4", "5" })]
         [TestCase(9, new string[] { "0", "1", "2", "3", "4", "5" }, new string[] { "0", "1", "2", "3", "4", "5" })]
@@ -220,7 +235,7 @@ namespace List.Tests
         }
 
         [TestCase(null, new string[] { })]
-        public void GetMin_WhenInvalidPassed_ShouldReturnArgumentException(string value,string[] actualArray)
+        public void GetMin_WhenInvalidPassed_ShouldReturnArgumentException(string value, string[] actualArray)
         {
             CreateList(actualArray);
 

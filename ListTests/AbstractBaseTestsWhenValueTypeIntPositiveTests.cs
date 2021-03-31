@@ -3,7 +3,7 @@ using System;
 
 namespace List.Tests
 {
-    public abstract class AbstractBaseTestsWhenValueTypeInt
+    public abstract class AbstractBaseTestsWhenValueTypeIntPositiveTests
     {
         protected IList<int> actual;
         protected IList<int> expected;
@@ -15,10 +15,10 @@ namespace List.Tests
         public void AddRangeTest(int[] actualArray, int[] expectedArray, int[] addedArray)
         {
             CreateLists(actualArray, expectedArray, null);
-            
+
             if (actual is LinkedList<int>)
             {
-                DoubleLinkedList<int>  addedList = DoubleLinkedList<int>.Create(addedArray);
+                DoubleLinkedList<int> addedList = DoubleLinkedList<int>.Create(addedArray);
                 actual.AddRange(addedList);
             }
             else if (actual is DoubleLinkedList<int>)
@@ -34,6 +34,7 @@ namespace List.Tests
 
             Assert.AreEqual(expected, actual);
         }
+
 
         [TestCase(100, 5, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 100, 100, 100, 100, 100 })]
         [TestCase(-10, 1, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, -10 })]
@@ -165,16 +166,6 @@ namespace List.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(10, new int[] { 1, 2, 3, 4, 5 })]
-        [TestCase(-10, new int[] { 1, 2, 3, 4, 5 })]
-        [TestCase(6, new int[] { 1, 2, 3, 4, 5 })]
-        public void RemoveByIndex_WhenInvalidPaseed_ShoultReturnIndexOutOfRangeException(int index, int[] actualArray)
-        {
-            CreateLists(actualArray, null, null);
-
-            Assert.Throws<IndexOutOfRangeException>(() => actual.RemoveByIndex(index));
-        }
-
         [TestCase(0, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4, 5 })]
         [TestCase(1, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3, 4 })]
         [TestCase(2, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { 0, 1, 2, 3 })]
@@ -205,7 +196,7 @@ namespace List.Tests
         [TestCase(7, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(100, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(1000, new int[] { }, new int[] { })]
-        public void RemoveRangeFirst_WhenValidValuePassed_SholdRemoveNElementForStart(int count, int[] actualArray, int[] expectedArray)
+        void RemoveRangeFirst_WhenValidValuePassed_SholdRemoveNElementForStart(int count, int[] actualArray, int[] expectedArray)
         {
             CreateLists(actualArray, expectedArray, null);
 
@@ -293,7 +284,6 @@ namespace List.Tests
         [TestCase(new int[] { 0 }, 0)]
         [TestCase(new int[] { 100, 200, 300, 400, 500, -1000 }, 5)]
         [TestCase(new int[] { -999999, 99999, 1, 0, 542 }, 0)]
-        [TestCase(new int[] { }, -1)]
         public void GetMinIndex_WhenValidListPassed_ShouldReturnIndexMinValueInList(int[] actualArray, int expected)
         {
             CreateLists(actualArray, null, null);
@@ -308,7 +298,6 @@ namespace List.Tests
         [TestCase(new int[] { 0 }, 0)]
         [TestCase(new int[] { 100, 200, 300, 400, 500, -1000 }, 4)]
         [TestCase(new int[] { -999999, 99999, 1, 0, 542 }, 1)]
-        [TestCase(new int[] { }, -1)]
         public void GetMaxIndex_WhenValidListPassed_ShouldReturnIndexMaxValueInList(int[] actualArray, int expected)
         {
             CreateLists(actualArray, null, null);
