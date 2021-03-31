@@ -6,7 +6,7 @@ namespace List
 {
     public interface IList<T>
     {
-        public T this[int index] { get; set; }
+        T this[int index] { get; set; }
 
         void Add(T value);
 
@@ -49,5 +49,7 @@ namespace List
         int GetMaxIndex();
 
         IList<T> Sort(bool isDescending);
+
+        T[] ToArray();
     }
 }
