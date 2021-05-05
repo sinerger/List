@@ -72,21 +72,25 @@ namespace List
 
         private LinkedList(T[] values)
         {
-            Length = values.Length;
-            if (values.Length != 0)
+            if (values != null)
             {
-                _root = new Node<T>(values[0]);
-                _tail = _root;
-                for (int i = 1; i < values.Length; i++)
+                Length = values.Length;
+                if (values.Length != 0)
                 {
-                    _tail.Next = new Node<T>(values[i]);
-                    _tail = _tail.Next;
+                    _root = new Node<T>(values[0]);
+                    _tail = _root;
+
+                    for (int i = 1; i < values.Length; i++)
+                    {
+                        _tail.Next = new Node<T>(values[i]);
+                        _tail = _tail.Next;
+                    }
                 }
-            }
-            else
-            {
-                _root = null;
-                _tail = _root;
+                else
+                {
+                    _root = null;
+                    _tail = _root;
+                }
             }
         }
 
@@ -422,22 +426,24 @@ namespace List
             if (value != null)
             {
                 Node<T> current = _root;
-                int index = 0;
+                int index = -1;
 
-                while (!(current is null))
+                for (int i = 0; i < Length; i++)
                 {
-                    if (current.Value.CompareTo(value) == 0)
+                    if (current != null)
                     {
-                        RemoveByIndex(index);
+                        if (current.Value.CompareTo(value) == 0)
+                        {
+                            RemoveByIndex(i);
+                            index = i;
+                            break;
+                        }
 
-                        return index;
+                        current = current.Next;
                     }
-
-                    ++index;
-                    current = current.Next;
                 }
 
-                return -1;
+                return index;
             }
             else
             {
@@ -459,7 +465,7 @@ namespace List
                 {
                     Node<T> current = _root;
 
-                    for (int i = 1; i < Length-1; i++)
+                    for (int i = 1; i < Length - 1; i++)
                     {
                         if (current.Next.Value.CompareTo(value) == 0)
                         {
@@ -522,26 +528,28 @@ namespace List
         {
             if (value != null)
             {
+                int result = -1;
                 if (Length > 0)
                 {
                     Node<T> current = _root;
-                    int index = 0;
 
-                    while (!(current is null))
+                    for (int i = 0; i < Length; i++)
                     {
-                        if (current.Value.CompareTo(value) == 0)
+                        if (current != null)
                         {
-                            return index;
-                        }
+                            if (current.Value.CompareTo(value) == 0)
+                            {
+                                result = i;
+                                break;
+                            }
 
-                        ++index;
-                        current = current.Next;
+                            current = current.Next;
+                        }
                     }
 
-                    return -1;
                 }
 
-                return -1;
+                return result;
             }
             else
             {
@@ -551,11 +559,13 @@ namespace List
 
         public int GetMinIndex()
         {
+            int indexMinValue = -1;
+
             if (Length > 0)
             {
                 Node<T> current = _root;
                 T minValue = current.Value;
-                int indexMinValue = 0;
+                indexMinValue = 0;
 
                 for (int i = 0; i < Length; i++)
                 {
@@ -567,20 +577,20 @@ namespace List
 
                     current = current.Next;
                 }
-
-                return indexMinValue;
             }
 
-            return -1;
+            return indexMinValue;
         }
 
         public int GetMaxIndex()
         {
+            int indexMaxValue = -1;
+
             if (Length > 0)
             {
                 Node<T> current = _root;
                 T maxValue = current.Value;
-                int indexMaxValue = 0;
+                indexMaxValue = 0;
 
                 for (int i = 0; i < Length; i++)
                 {
@@ -592,11 +602,9 @@ namespace List
 
                     current = current.Next;
                 }
-
-                return indexMaxValue;
             }
 
-            return -1;
+            return indexMaxValue;
         }
 
         public T GetMin()
@@ -653,10 +661,30 @@ namespace List
         public IList<T> Sort(bool isDescending)
         {
             LinkedList<T> list = new LinkedList<T>();
-            list._root = this._root;
-            list.Length = this.Length;
+
+            list._root = _root;
+            list.Length = Length;
             int coef = isDescending ? 1 : -1;
+
             return MergeSort(list, coef);
+        }
+
+        public T[] ToArray()
+        {
+            if (Length > 0)
+            {
+                T[] result = new T[Length];
+                Node<T> current = _root;
+                for (int i = 0; i < Length; i++)
+                {
+                    result[i] = current.Value;
+                    current = current.Next;
+                }
+
+                return result;
+            }
+
+            return new T[] { };
         }
 
         public override bool Equals(object obj)
@@ -697,24 +725,6 @@ namespace List
             }
 
             throw new ArgumentNullException("Invalid object");
-        }
-
-        public T[] ToArray()
-        {
-            if (Length > 0)
-            {
-                T[] result = new T[Length];
-                Node<T> current = _root;
-                for (int i = 0; i < Length; i++)
-                {
-                    result[i] = current.Value;
-                    current = current.Next;
-                }
-
-                return result;
-            }
-
-            return new T[] { };
         }
 
         public override string ToString()

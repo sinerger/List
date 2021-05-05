@@ -14,6 +14,44 @@ namespace List.Tests
 
         public abstract void CreateList(string[] actualArray, string[] addedArray);
 
+        [TestCase(-100, new string[] { })]
+        [TestCase(-10, new string[] { })]
+        [TestCase(-1, new string[] { })]
+        [TestCase(0, new string[] { })]
+        [TestCase(1, new string[] { "0" })]
+        [TestCase(2, new string[] { "0", "1" })]
+        [TestCase(3, new string[] { "0", "1", "2" })]
+        [TestCase(4, new string[] { "0", "1", "2", "3" })]
+        [TestCase(5, new string[] { "0", "1", "2", "3", "4" })]
+        [TestCase(6, new string[] { "0", "1", "2", "3", "4", "5" })]
+        public void Indexator_whenInvalidSetPassed_ShouldReturnIndexOutOfRangeException(int index, string[] actualArray)
+        {
+            CreateList(actualArray);
+
+            string x = string.Empty;
+
+            Assert.Throws<IndexOutOfRangeException>(() => actual[index] = x);
+        }
+
+        [TestCase(-100, new string[] { })]
+        [TestCase(-10, new string[] { })]
+        [TestCase(-1, new string[] { })]
+        [TestCase(0, new string[] { })]
+        [TestCase(1, new string[] { "0" })]
+        [TestCase(2, new string[] { "0", "1" })]
+        [TestCase(3, new string[] { "0", "1", "2" })]
+        [TestCase(4, new string[] { "0", "1", "2", "3" })]
+        [TestCase(5, new string[] { "0", "1", "2", "3", "4" })]
+        [TestCase(6, new string[] { "0", "1", "2", "3", "4", "5" })]
+        public void Indexator_whenInvalidGetPassed_ShouldReturnIndexOutOfRangeException(int index, string[] actualArray)
+        {
+            CreateList(actualArray);
+
+            string x = string.Empty;
+
+            Assert.Throws<IndexOutOfRangeException>(() => x = actual[index]);
+        }
+
         [TestCase(null)]
         public void CreateArray_WhenIvalinPassed_SholdReturnArgumentException(string value)
         {
@@ -25,8 +63,6 @@ namespace List.Tests
         {
             Assert.Throws<ArgumentException>(() => LinkedList<string>.Create(array));
         }
-
-        
 
         [TestCase(null, new string[] { "0", "1", "2", "3", "4", "5" })]
         [TestCase(null, new string[] { "0" })]
@@ -85,6 +121,16 @@ namespace List.Tests
             CreateList(actualArray);
 
             Assert.Throws<NullReferenceException>(() => actual.AddRange(value));
+        }
+
+        [TestCase(null, new string[] { "0", "1", "2", "3", "4", "5" })]
+        [TestCase(null, new string[] { "0" })]
+        [TestCase(null, new string[] { })]
+        public void AddRangeFirst_WhenInvalidPassed_ShouldReturnNullReferenceException(IList<string> value, string[] actualArray)
+        {
+            CreateList(actualArray);
+
+            Assert.Throws<NullReferenceException>(() => actual.AddRangeFirst(value));
         }
 
         [TestCase(0, null, new string[] { "0", "1", "2", "3", "4", "5" })]
@@ -163,8 +209,6 @@ namespace List.Tests
         [TestCase(100, 5, new string[] { "0", "1", "2", "3", "4", "5" })]
         [TestCase(1, 6, new string[] { "0" })]
         [TestCase(-1, 7, new string[] { "0" })]
-        [TestCase(-1, 8, new string[] { })]
-        [TestCase(0, 9, new string[] { })]
         public void RemoveRangeByIndex_WhenInvalidPassed_ShouldReturnIndexOutOfRangeException(int index, int count, string[] actualArray)
         {
             CreateList(actualArray);

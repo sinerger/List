@@ -21,5 +21,13 @@ namespace List.Tests
                 addedList = LinkedList<int>.Create(addedArray);
             }
         }
+        public override void CreateLists(int actualValue, int[] expectedArray)
+        {
+            actual = LinkedList<int>.Create(actualValue);
+            if (expectedArray != null)
+            {
+                expected = LinkedList<int>.Create(expectedArray);
+            }
+        }
     }
 }

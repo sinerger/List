@@ -11,6 +11,67 @@ namespace List.Tests
 
         public abstract void CreateLists(int[] actualArray, int[] expectedArray, int[] addedArray);
 
+        public abstract void CreateLists(int actualValue, int[] expectedArray);
+
+        //[TestCase(-100, new string[] { })]
+        //[TestCase(-10, new string[] { })]
+        //[TestCase(-1, new string[] { })]
+        //[TestCase(0, new string[] { })]
+        //[TestCase(1, new string[] { "0" })]
+        //[TestCase(2, new string[] { "0", "1" })]
+        //[TestCase(3, new string[] { "0", "1", "2" })]
+        //[TestCase(4, new string[] { "0", "1", "2", "3" })]
+        //[TestCase(5, new string[] { "0", "1", "2", "3", "4" })]
+        //[TestCase(6, new string[] { "0", "1", "2", "3", "4", "5" })]
+        //public void Indexator_whenValidSetPassed_ShouldReturnValue(int index, int[] actualArray, int exeptionValue)
+        //{
+        //    CreateList(actualArray);
+
+        //    string x = string.Empty;
+
+        //    Assert.Throws<IndexOutOfRangeException>(() => actual[index] = x);
+        //}
+
+        [TestCase(4, new int[] { 1, 2, 3, 4, 5 }, 5)]
+        [TestCase(3, new int[] { 1, 2, 3, 4, 5 }, 4)]
+        [TestCase(2, new int[] { 1, 2, 3, 4, 5 }, 3)]
+        [TestCase(1, new int[] { 1, 2, 3, 4, 5 }, 2)]
+        [TestCase(0, new int[] { 1, 2, 3, 4, 5 }, 1)]
+        [TestCase(0, new int[] { 1 }, 1)]
+        public void Indexator_whenValidGetPassed_ShouldReturnValue(int index, int[] actualArray, int expectedValue)
+        {
+            CreateLists(actualArray, null,null);
+
+            Assert.AreEqual(expectedValue, actual[index]);
+        }
+
+        [TestCase(1, new int[] { 1 })]
+        public void Create_WhenValidPassed_SholdCreateList(int value, int[] expectedArray)
+        {
+            CreateLists(value, expectedArray);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(new int[] { 1 }, new int[] { 1, 5 })]
+        public void Create_WhenValidPassed_SholdCreateList(int[] actualArray, int[] expectedArray)
+        {
+            CreateLists(actualArray, expectedArray, null);
+            actual.Add(5);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestCase(new int[] { 1, 2, 3, 4, 5 }, "1 2 3 4 5")]
+        public void ToString_WhenValidPassed_ShoultReturnValueToString(int[] actualArray, string expectedString)
+        {
+            CreateLists(actualArray, null, null);
+
+            string actualString = actual.ToString();
+
+            Assert.AreEqual(expectedString, actualString);
+        }
+
         [TestCase(new int[] { 0, 1 }, new int[] { 0, 1, 2, 3 }, new int[] { 2, 3 })]
         public void AddRangeTest(int[] actualArray, int[] expectedArray, int[] addedArray)
         {
@@ -196,7 +257,7 @@ namespace List.Tests
         [TestCase(7, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(100, new int[] { 0, 1, 2, 3, 4, 5 }, new int[] { })]
         [TestCase(1000, new int[] { }, new int[] { })]
-        void RemoveRangeFirst_WhenValidValuePassed_SholdRemoveNElementForStart(int count, int[] actualArray, int[] expectedArray)
+        public void RemoveRangeFirst_WhenValidValuePassed_SholdRemoveNElementForStart(int count, int[] actualArray, int[] expectedArray)
         {
             CreateLists(actualArray, expectedArray, null);
 

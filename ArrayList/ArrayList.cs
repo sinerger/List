@@ -8,7 +8,7 @@ namespace List
     {
         private int _length;
         private T[] _array;
-        private int _initLength = 10;
+        private const int InitLength = 10;
 
         public int Length
         {
@@ -49,34 +49,47 @@ namespace List
         public ArrayList()
         {
             Length = 0;
-            _array = new T[_initLength];
+            _array = new T[InitLength];
         }
 
-        public ArrayList(T value)
+        private ArrayList(T value)
         {
             Length = 1;
-            _array = new T[_initLength];
+            _array = new T[InitLength];
             _array[0] = value;
         }
 
         private ArrayList(T[] values)
         {
-            Length = values.Length;
-            _array = new T[(int)(values.Length * 2)];
-            for (int i = 0; i < Length; i++)
+            if (values != null)
             {
-                _array[i] = values[i];
+                Length = values.Length;
+                _array = new T[(int)(values.Length * 2)];
+
+                for (int i = 0; i < Length; i++)
+                {
+                    _array[i] = values[i];
+                }
+            }
+        }
+
+        public static ArrayList<T> Create(T value)
+        {
+            if (value != null)
+            {
+                ArrayList<T> list = new ArrayList<T>(value);
+
+                return list;
             }
 
+            throw new ArgumentException("Value is null");
         }
 
         public static ArrayList<T> Create(T[] array)
         {
             if (array != null)
             {
-                ArrayList<T> list = new ArrayList<T>(array);
-
-                return list;
+                return new ArrayList<T>(array);
             }
 
             throw new ArgumentException("Array is null");
@@ -219,8 +232,7 @@ namespace List
         /// <param count="count">Count of items to be removed.</param>
         public void RemoveRangeFirst(int count)
         {
-                RemoveRangeByIndex(index: 0, count);
-            
+            RemoveRangeByIndex(index: 0, count);
         }
 
         /// <summary>
@@ -230,38 +242,37 @@ namespace List
         /// <param index="index">Index from which items will be removed.</param>
         public void RemoveRangeByIndex(int index, int count)
         {
-            if (index >= 0 && index <= Length && count >= 0)
+            if (Length > 0 && count >= 0)
             {
-                if (index == Length)
+                if (index >= 0 && index < Length)
                 {
-                    throw new IndexOutOfRangeException();
-                }
-                else if (count + index > Length)
-                {
-                    Length = index;
+                    if (count + index > Length)
+                    {
+                        Length = index;
+                    }
+                    else
+                    {
+                        for (int i = index; i < Length; i++)
+                        {
+                            if (i + count < _array.Length)
+                            {
+                                _array[i] = _array[i + count];
+                            }
+                        }
+
+                        Length -= count;
+                    }
+
+                    DownSize();
                 }
                 else
                 {
-                    for (int i = index; i < Length; i++)
-                    {
-                        if (i + count < _array.Length)
-                        {
-                            _array[i] = _array[i + count];
-                        }
-                    }
-
-                    Length -= count;
+                    throw new IndexOutOfRangeException();
                 }
-
-                DownSize();
             }
             else if (count < 0)
             {
                 throw new ArgumentException("Incorrect count");
-            }
-            else
-            {
-                throw new IndexOutOfRangeException();
             }
         }
 
@@ -274,17 +285,20 @@ namespace List
         {
             if (value != null)
             {
+                int result = -1;
+
                 for (int i = 0; i < Length; i++)
                 {
                     if (_array[i].CompareTo(value) == 0)
                     {
                         RemoveByIndex(i);
 
-                        return i;
+                        result = i;
+                        break;
                     }
                 }
 
-                return -1;
+                return result;
             }
 
             throw new ArgumentException("Value is null");
@@ -300,6 +314,7 @@ namespace List
             if (value != null)
             {
                 int countRemoveElements = 0;
+
                 for (int i = 0; i < Length; i++)
                 {
                     if (_array[i].CompareTo(value) == 0)
@@ -314,8 +329,6 @@ namespace List
                 if (countRemoveElements == 0)
                 {
                     countRemoveElements -= 1;
-
-                    return countRemoveElements;
                 }
 
                 return countRemoveElements;
@@ -333,18 +346,20 @@ namespace List
         {
             if (value != null)
             {
+                int result = -1;
+
                 if (Length != 0)
                 {
                     for (int i = 0; i < Length; i++)
                     {
                         if (_array[i].CompareTo(value) == 0)
                         {
-                            return i;
+                            result = i;
                         }
                     }
                 }
 
-                return -1;
+                return result;
             }
 
             throw new ArgumentException("Value is null");
@@ -359,7 +374,7 @@ namespace List
             {
                 for (int i = 0; i < Length / 2; i++)
                 {
-                    Swap(i, Length - 1 - i);
+                    Swap(firstIndex: i, secondIndex: Length - 1 - i);
                 }
             }
         }
@@ -392,6 +407,7 @@ namespace List
             {
                 T minValue = _array[0];
                 int indexMinValue = 0;
+
                 for (int i = 0; i < Length; i++)
                 {
                     if (_array[i].CompareTo(minValue) == -1)
@@ -461,33 +477,30 @@ namespace List
         /// <param index="index">Index by which the value will be inserted.</param>
         public void AddRangeByIndex(int index, IList<T> list)
         {
-            //if (list is ArrayList<T>)
-            //{
-            //    ArrayList<T> arrayList = (ArrayList<T>)list;
             ArrayList<T> arrayList = Create(list.ToArray());
+
             if (index >= 0 && index <= Length)
             {
+                int oldLength = Length;
                 Length += arrayList.Length;
+
                 if (Length >= _array.Length)
                 {
                     UpSize();
                 }
 
                 int n = arrayList.Length;
-                for (int i = Length - 1; i >= index; i--)
+
+                for (int i = index; i < oldLength; i++)
                 {
-                    if (i + n < _array.Length)
-                    {
-                        _array[i + n] = _array[i];
-                    }
+                    Swap(i, i + n);
                 }
 
-                int count = 0;
-                for (int i = index; i < Length; i++)
+                for (int i = index, count = 0; i < Length; i++, count++)
                 {
                     if (count < arrayList.Length)
                     {
-                        _array[i] = arrayList[count++];
+                        _array[i] = arrayList[count];
                     }
                 }
             }
@@ -495,18 +508,13 @@ namespace List
             {
                 throw new IndexOutOfRangeException();
             }
-            //}
-            //else
-            //{
-            //    throw new ArgumentException("Invalid type List");
-            //}
         }
 
         /// <summary>
         /// Sorts the list with inserts.
         /// </summary>
         /// <param isDescending="isDescending">If true, it sorts in descending order. If false, it sorts in ascending order.</param>
-        public IList<T> Sort(bool isDescending)
+        public IList<T> Sort(bool isDescending = false)
         {
             ArrayList<T> list = new ArrayList<T>();
 
@@ -515,12 +523,14 @@ namespace List
                 list.Add(_array[i]);
             }
 
+            int coef = isDescending ? -1 : 1;
+
             for (int i = 1; i < list.Length; i++)
             {
                 T currentValue = list[i];
                 int currentIndex = i;
-                while ((isDescending && currentIndex > 0 && (list[currentIndex - 1].CompareTo(currentValue) == -1))
-                    || (!isDescending && currentIndex > 0 && (list[currentIndex - 1].CompareTo(currentValue) == 1)))
+
+                while (currentIndex > 0 && (list[currentIndex - 1].CompareTo(currentValue) == coef))
                 {
                     list.Swap(currentIndex, currentIndex - 1);
 
@@ -529,27 +539,47 @@ namespace List
 
                 list[currentIndex] = currentValue;
             }
+
             return list;
+        }
+
+        public T[] ToArray()
+        {
+            T[] result = new T[] { };
+
+            if (Length > 0)
+            {
+                result = new T[Length];
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i] = _array[i];
+                }
+            }
+
+            return result;
         }
 
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
+
             for (int i = 0; i < Length; i++)
             {
-                result.Append(_array[i]);
-                result.Append(", ");
+                result.Append($"{_array[i]} ");
             }
 
-            return result.ToString();
+            return result.ToString().Trim();
         }
 
         public override bool Equals(object obj)
         {
+            bool result = false;
+
             if (obj is ArrayList<T>)
             {
                 ArrayList<T> list = (ArrayList<T>)obj;
-                bool result = true;
+                result = true;
+
                 if (this.Length == list.Length)
                 {
                     for (int i = 0; i < Length; i++)
@@ -564,15 +594,13 @@ namespace List
                 {
                     result = false;
                 }
-
-                return result;
             }
-            else if(obj is null)
+            else if (obj is null)
             {
                 throw new ArgumentNullException("Object is null");
             }
 
-            return false;
+            return result;
         }
 
         private void Swap(int firstIndex, int secondIndex)
@@ -587,6 +615,7 @@ namespace List
         {
             int tempLength = (int)(Length * 1.33d + 1);
             T[] tempArray = new T[tempLength];
+
             for (int i = 0; i < _array.Length; i++)
             {
                 tempArray[i] = _array[i];
@@ -601,6 +630,7 @@ namespace List
             {
                 int tempLength = (int)(Length * 1.33d + 1);
                 T[] tempArray = new T[tempLength];
+
                 for (int i = 0; i < Length; i++)
                 {
                     tempArray[i] = _array[i];
@@ -608,21 +638,6 @@ namespace List
 
                 _array = tempArray;
             }
-        }
-
-        public T[] ToArray()
-        {
-            if (Length > 0)
-            {
-                T[] result = new T[Length];
-                for (int i = 0; i < result.Length; i++)
-                {
-                    result[i] = _array[i];
-                }
-                return result;
-            }
-
-            return new T[] { };
         }
     }
 }

@@ -8,16 +8,11 @@ namespace List
     {
         public T Value { get; set; }
         public Node<T> Next { get; set; }
+
         public Node(T value)
         {
             Value = value;
             Next = null;
-        }
-
-        public override string ToString()
-        {
-            string result = Value.ToString();
-            return result;
         }
     }
 }

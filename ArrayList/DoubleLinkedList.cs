@@ -123,6 +123,7 @@ namespace List
                     _tail.Next.Previous = _tail;
                     _tail = _tail.Next;
                 }
+
                 ++Length;
             }
             else
